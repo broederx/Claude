@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Logo from "@/components/Logo";
 import { setRole } from "@/lib/actions";
@@ -16,6 +17,11 @@ const roles: { id: Role; label: string }[] = [
 export default function AppHeader() {
   const { role } = useAppState();
   const [confirmReset, setConfirmReset] = useState(false);
+  const pathname = usePathname();
+  const nav = [
+    { href: "/", label: "Projecten", active: !pathname.startsWith("/leveranciers") },
+    { href: "/leveranciers", label: "Leveranciers", active: pathname.startsWith("/leveranciers") },
+  ];
 
   return (
     <header className="border-b border-border bg-surface/80 backdrop-blur print:hidden">
@@ -27,6 +33,21 @@ export default function AppHeader() {
           </span>
           <span className="hidden text-xs uppercase tracking-[0.2em] text-muted sm:inline">klantportaal</span>
         </Link>
+
+        {role === "architect" && (
+          <nav aria-label="Hoofdmenu" className="order-last flex w-full gap-6 text-sm md:order-none md:w-auto">
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={item.active ? "page" : undefined}
+                className={item.active ? "text-foreground" : "text-muted hover:text-foreground"}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        )}
 
         <div className="flex items-center gap-3">
           <span className="hidden text-xs text-muted md:inline">Bekijk als</span>

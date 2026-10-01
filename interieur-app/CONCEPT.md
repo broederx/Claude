@@ -45,6 +45,20 @@ PDF's in bijlagen en Excel-lijstjes.
 8. **Offertes & facturen.** Offertes accepteren, facturen met btw-berekening,
    doorlopende nummering, betalen met iDEAL (gesimuleerd), opslaan als PDF.
 
+**Leveranciers (alleen studio).** Een apart onderdeel, volledig gescheiden
+van de klantkant:
+
+- Een overzicht van leveranciers met contactpersoon, dealernummer, korting,
+  voorwaarden en interne notities.
+- Per product legt de studio de leverancier en de inkoopprijs vast. De klant
+  ziet alleen de verkoopprijs, nooit de leverancier, de inkoopprijs of de
+  marge.
+- Goedgekeurde producten bestel je per leverancier met een inkooporder. Er
+  komt één order per project, zodat kosten en leveringen per project
+  gescheiden blijven. Een order gaat van verstuurd via bevestigd naar
+  geleverd, met een verwachte leverdatum en een afleveradres (project of
+  studio).
+
 Alles wat op een reactie wacht, verschijnt automatisch als "Te doen" op het
 dashboard en als teller op het tabblad.
 
@@ -107,5 +121,5 @@ dashboard en als teller op het tabblad.
 - Welk boekhoudpakket gebruik je nu?
 - Werken klanten vaak met twee personen (partners) die allebei toegang
   willen?
-- Wil je producten in je eigen naam bestellen en doorbelasten (marge
-  zichtbaar voor de studio, niet voor de klant), of bestelt de klant zelf?
+- In het prototype bestelt de studio in eigen naam en belast door. Moet de
+  klant ook zelf rechtstreeks kunnen bestellen?

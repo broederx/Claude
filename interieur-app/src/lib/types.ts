@@ -68,12 +68,43 @@ export interface ProjectDoc {
 
 export type ProductStatus = "voorstel" | "goedgekeurd" | "afgewezen" | "besteld" | "geleverd";
 
+export interface Supplier {
+  id: string;
+  name: string;
+  category: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  website?: string;
+  accountNumber?: string;
+  discountPct: number;
+  terms?: string;
+  notes?: string;
+}
+
+export type OrderStatus = "verstuurd" | "bevestigd" | "geleverd";
+
+// Inkooporder van de studio bij een leverancier. Klanten zien deze nooit.
+export interface PurchaseOrder {
+  id: string;
+  number: string;
+  supplierId: string;
+  projectId: string;
+  productIds: string[];
+  date: string;
+  expectedDelivery?: string;
+  deliverTo: "project" | "studio";
+  status: OrderStatus;
+}
+
 export interface Product {
   id: string;
   projectId: string;
   room: string;
   name: string;
-  supplier: string;
+  // Alleen zichtbaar voor de studio: leverancier en inkoopprijs.
+  supplierId: string;
+  purchasePrice: number;
   price: number;
   qty: number;
   leadTimeWeeks: number;
@@ -132,5 +163,7 @@ export interface AppState {
   milestones: Milestone[];
   messages: Message[];
   invoices: Invoice[];
+  suppliers: Supplier[];
+  orders: PurchaseOrder[];
   lastRead: Record<string, Record<Role, string>>;
 }

@@ -4,7 +4,16 @@ import { setAppState } from "./store";
 import { today } from "./format";
 import type { AppState, Role } from "./types";
 
-type Collection = "projects" | "mood" | "docs" | "products" | "milestones" | "messages" | "invoices";
+type Collection =
+  | "projects"
+  | "mood"
+  | "docs"
+  | "products"
+  | "milestones"
+  | "messages"
+  | "invoices"
+  | "suppliers"
+  | "orders";
 type Item<K extends Collection> = AppState[K][number];
 
 export function setRole(role: Role) {
@@ -101,7 +110,12 @@ export function openActions(state: AppState, role: Role, projectId?: string): Op
       actions.push({ projectId: inv.projectId, label: `Factuur ${inv.number} is over de vervaldatum`, href: `${base(inv.projectId)}/financien/${inv.id}` });
     }
     for (const p of inScope(state.products).filter((p) => p.status === "goedgekeurd")) {
-      actions.push({ projectId: p.projectId, label: `Bestellen: ${p.name}`, href: `${base(p.projectId)}/producten` });
+      const supplier = state.suppliers.find((s) => s.id === p.supplierId);
+      actions.push({
+        projectId: p.projectId,
+        label: `Bestellen bij ${supplier?.name ?? "leverancier"}: ${p.name}`,
+        href: `/leveranciers/${p.supplierId}`,
+      });
     }
   }
 
