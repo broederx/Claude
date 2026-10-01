@@ -102,7 +102,7 @@ dashboard en als teller op het tabblad.
 
 ## Open vragen
 
-- Officiële **huisstijl**: logo, kleuren en lettertypes (nu een benadering).
+- Officiële **huisstijl**: het logo is verwerkt en de kleuren zijn afgeleid van het logo-grijs; de exacte kleurcodes en lettertypes zijn nog een benadering.
 - Bedrijfsgegevens voor facturen: adres, KvK, btw-nummer en IBAN.
 - Welk boekhoudpakket gebruik je nu?
 - Werken klanten vaak met twee personen (partners) die allebei toegang

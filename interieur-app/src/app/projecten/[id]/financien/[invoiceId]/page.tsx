@@ -7,6 +7,7 @@ import { patchItem, removeItem } from "@/lib/actions";
 import { euro, invoiceTotals, longDate } from "@/lib/format";
 import { useProject } from "@/lib/hooks";
 import { studio } from "@/lib/studio";
+import Logo from "@/components/Logo";
 import { Button, Card } from "@/components/ui";
 import { InvoiceStatusBadge } from "../status";
 
@@ -86,7 +87,8 @@ export default function InvoicePage() {
       <Card className="p-8 sm:p-12 print:border-0 print:p-0">
         <div className="flex flex-col justify-between gap-8 sm:flex-row">
           <div>
-            <p className="font-serif text-3xl">
+            <Logo size={64} />
+            <p className="mt-4 font-serif text-3xl">
               mim <span className="text-muted">|</span> interiors
             </p>
             <p className="mt-2 text-sm text-muted">

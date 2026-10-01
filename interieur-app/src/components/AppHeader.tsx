@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Logo from "@/components/Logo";
 import { setRole } from "@/lib/actions";
 import { resetAppState, useAppState } from "@/lib/store";
 import { studio } from "@/lib/studio";
@@ -17,7 +18,8 @@ export default function AppHeader() {
   return (
     <header className="border-b border-border bg-surface/80 backdrop-blur print:hidden">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
-        <Link href="/" className="flex items-baseline gap-3">
+        <Link href="/" className="flex items-center gap-3">
+          <Logo />
           <span className="font-serif text-2xl tracking-wide">
             mim <span className="text-muted">|</span> interiors
           </span>

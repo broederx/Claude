@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
-/* Huisstijl. Benadering van mim | interiors: rustig, natuurlijke tinten.
-   Vervang deze waarden door de officiële kleuren zodra die er zijn. */
+/* Huisstijl mim | interiors. --stone is het grijs van het logo (#d1d0ce),
+   --surface ligt dicht bij het wit van de letters. */
 :root {
-  --background: #f5f2ec;
-  --surface: #fdfbf8;
-  --foreground: #2b2824;
-  --muted: #857c71;
-  --border: #e3dcd1;
-  --stone: #d3c9ba;
-  --accent: #8b6b4e;
+  --background: #f3f2f0;
+  --surface: #fbfaf9;
+  --foreground: #2b2a28;
+  --muted: #7f7c78;
+  --border: #e0dedb;
+  --stone: #d1d0ce;
+  --accent: #7a736b;
   --sage: #6f7765;
   --warn: #b0553a;
 }
