@@ -96,9 +96,12 @@ dashboard en als teller op het tabblad.
   van 7 jaar voor facturen, en een klant die zijn of haar gegevens kan
   opvragen.
 
+## Afspraken
+
+- Klanten worden aangesproken met **je**.
+
 ## Open vragen
 
-- Spreken we klanten aan met **je of u**? Het prototype gebruikt *je*.
 - Officiële **huisstijl**: logo, kleuren en lettertypes (nu een benadering).
 - Bedrijfsgegevens voor facturen: adres, KvK, btw-nummer en IBAN.
 - Welk boekhoudpakket gebruik je nu?
