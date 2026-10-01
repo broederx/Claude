@@ -8,10 +8,10 @@ export const docCategories: Record<ProjectDoc["category"], string> = {
   overig: "Overig",
 };
 
-// Uitvoerders zien alleen definitieve documentatie: goedgekeurd door de klant,
-// geen contracten, en niet door de studio afgeschermd.
+// Uitvoerders zien alleen documenten die de studio als definitief heeft
+// aangemerkt.
 export function contractorCanSee(doc: ProjectDoc) {
-  return doc.status === "goedgekeurd" && doc.category !== "contract" && !doc.hiddenFromContractors;
+  return doc.final === true;
 }
 
 // Projecten waar de uitvoerder toegang toe heeft, met hun definitieve documenten.

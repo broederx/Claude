@@ -22,7 +22,7 @@ PDF's in bijlagen en Excel-lijstjes.
 | --- | --- |
 | Studio (Janine, later medewerkers) | Projecten aanmaken, alles delen, fase bijwerken, facturen maken |
 | Klant (soms twee personen) | Eigen project(en) zien, reageren, goedkeuren, wensen invullen, betalen |
-| Uitvoerder (aannemer, schilder, elektricien…) | Alleen de definitieve documentatie van de projecten waar de studio toegang toe geeft. Geen klantgegevens, prijzen, orders, planning of berichten |
+| Uitvoerder (aannemer, schilder, elektricien…) | Alleen de documenten en tekeningen die de studio als definitief aanvinkt, van de projecten waar de studio toegang toe geeft. Geen klantgegevens, prijzen, orders, planning of berichten |
 
 ## Onderdelen (in het prototype)
 
@@ -62,12 +62,11 @@ van de klantkant:
 Leveranciers hebben geen eigen inlog; orders lopen via de studio.
 
 **Uitvoerders.** Aannemers, schilders, elektriciens en andere vakmensen loggen
-zelf in en zien **alleen de definitieve documentatie** van de projecten die de
-studio voor hen aanvinkt, met projectnaam en adres. Definitief betekent:
-goedgekeurd door de klant, nooit contracten, concepten of documenten waarover
-nog een wijziging loopt. De studio kan een definitief document per stuk
-afschermen. Komt er een nieuwe versie ter goedkeuring, dan verdwijnt het
-document bij de uitvoerder tot de klant opnieuw akkoord geeft.
+zelf in en zien **alleen de documenten en tekeningen die de studio als
+definitief heeft aangevinkt**, van de projecten waar de studio hun toegang
+geeft. De goedkeuring van de klant speelt daarbij geen rol; de studio beslist.
+Deelt de studio een nieuwe versie, dan staat die standaard niet op definitief
+tot de studio dat opnieuw aanvinkt.
 
 Alles wat op een reactie wacht, verschijnt automatisch als "Te doen" op het
 dashboard en als teller op het tabblad.

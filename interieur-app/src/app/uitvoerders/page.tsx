@@ -19,7 +19,7 @@ export default function UitvoerdersPage() {
     <div>
       <PageHeader
         title="Uitvoerders"
-        intro="Aannemers, schilders, elektriciens en andere vakmensen. Een uitvoerder ziet alleen de definitieve documentatie van de projecten die je hier aanvinkt: geen klantgegevens, prijzen, planning of berichten."
+        intro="Aannemers, schilders, elektriciens en andere vakmensen. Een uitvoerder ziet alleen de documenten en tekeningen die je bij een project als definitief aanmerkt, en alleen van de projecten die je hier aanvinkt."
         action={!adding && <Button onClick={() => setAdding(true)}>+ Uitvoerder toevoegen</Button>}
       />
 

@@ -1,6 +1,6 @@
 import type { AppState } from "./types";
 
-export const STATE_VERSION = 4;
+export const STATE_VERSION = 5;
 
 export const seed: AppState = {
   version: STATE_VERSION,
@@ -155,6 +155,7 @@ export const seed: AppState = {
       category: "3d",
       version: 2,
       fileName: "VW_renders_woonkeuken_v2.pdf",
+      final: true,
       sizeKb: 18300,
       uploadedAt: "2026-09-18T14:30:00",
       status: "goedgekeurd",
@@ -189,6 +190,7 @@ export const seed: AppState = {
       category: "tekening",
       version: 2,
       fileName: "PR_lichtplan_werkkamer_v2.pdf",
+      final: true,
       sizeKb: 980,
       uploadedAt: "2026-09-26T15:20:00",
       status: "goedgekeurd",

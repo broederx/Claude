@@ -64,8 +64,9 @@ export interface ProjectDoc {
   uploadedAt: string;
   status: DocStatus;
   feedback?: string;
-  // Studio kan een definitief document afschermen voor uitvoerders.
-  hiddenFromContractors?: boolean;
+  // Door de studio als definitief aangemerkt; alleen deze documenten zien
+  // uitvoerders.
+  final?: boolean;
 }
 
 export type ProductStatus = "voorstel" | "goedgekeurd" | "afgewezen" | "besteld" | "geleverd";

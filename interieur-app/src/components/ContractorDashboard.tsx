@@ -25,8 +25,8 @@ export default function ContractorDashboard() {
         <p className="text-xs uppercase tracking-[0.25em] text-muted">Uitvoerders · {studio.name}</p>
         <h1 className="mt-2 font-serif text-4xl font-light sm:text-5xl">Welkom, {contractor.name}</h1>
         <p className="mt-3 max-w-2xl text-muted">
-          Hier vind je de definitieve tekeningen en documenten voor de projecten waar je aan werkt. Je ziet altijd de
-          laatst goedgekeurde versie. Vragen over de documenten stel je aan {studio.architect}, {studio.email}.
+          Hier vind je de definitieve tekeningen en documenten voor de projecten waar je aan werkt. Je ziet alleen wat
+          de studio als definitief heeft vrijgegeven. Vragen over de documenten stel je aan {studio.architect}, {studio.email}.
         </p>
       </section>
 
@@ -53,8 +53,7 @@ export default function ContractorDashboard() {
                         <div>
                           <p className="font-medium">{doc.title}</p>
                           <p className="text-xs text-muted">
-                            {docCategories[doc.category]} · versie {doc.version} · {fileSize(doc.sizeKb)} · definitief
-                            sinds {longDate(doc.uploadedAt)}
+                            {docCategories[doc.category]} · versie {doc.version} · {fileSize(doc.sizeKb)} · {longDate(doc.uploadedAt)}
                           </p>
                         </div>
                       </div>

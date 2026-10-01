@@ -31,7 +31,7 @@ export default function DocumentenPage() {
         title="Documenten"
         intro={
           role === "architect"
-            ? "Tekeningen, impressies en afspraken, altijd in de laatste versie. Uitvoerders van dit project zien alleen goedgekeurde documenten, nooit contracten."
+            ? "Tekeningen, impressies en afspraken, altijd in de laatste versie. Uitvoerders van dit project zien alleen documenten die je als definitief aanvinkt."
             : "Tekeningen, impressies en afspraken, altijd in de laatste versie. Goedkeuringen worden vastgelegd."
         }
         action={role === "architect" && !uploading && <Button onClick={() => setUploading(true)}>+ Document delen</Button>}
@@ -72,7 +72,7 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <Badge tone={status.tone}>{status.label}</Badge>
-          {!isClient && contractorCanSee(doc) && <Badge>Zichtbaar voor uitvoerders</Badge>}
+          {!isClient && contractorCanSee(doc) && <Badge tone="sage">Definitief · zichtbaar voor uitvoerders</Badge>}
           <Button variant="secondary" onClick={() => setViewing(!viewing)}>
             Bekijken
           </Button>
@@ -122,14 +122,14 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
         </div>
       )}
 
-      {!isClient && doc.status === "goedgekeurd" && doc.category !== "contract" && (
+      {!isClient && (
         <label className="mt-4 flex items-center gap-2 border-t border-border pt-4 text-sm text-muted">
           <input
             type="checkbox"
-            checked={!doc.hiddenFromContractors}
-            onChange={(e) => patchItem("docs", doc.id, { hiddenFromContractors: !e.target.checked })}
+            checked={doc.final === true}
+            onChange={(e) => patchItem("docs", doc.id, { final: e.target.checked })}
           />
-          Delen met uitvoerders van dit project
+          Definitief: zichtbaar voor uitvoerders van dit project
         </label>
       )}
 
@@ -143,6 +143,8 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
                 status: "ter-goedkeuring",
                 feedback: undefined,
                 uploadedAt: nowIso(),
+                // Een nieuwe versie is nooit automatisch definitief.
+                final: false,
                 fileName: doc.fileName.replace(/v\d+/, `v${doc.version + 1}`),
               })
             }
@@ -171,6 +173,7 @@ function UploadForm({ projectId, onDone }: { projectId: string; onDone: () => vo
       sizeKb: file instanceof File && file.size ? Math.ceil(file.size / 1024) : 800,
       uploadedAt: nowIso(),
       status: data.get("approval") ? "ter-goedkeuring" : "info",
+      final: data.get("final") === "on",
     });
     onDone();
   }
@@ -195,6 +198,9 @@ function UploadForm({ projectId, onDone }: { projectId: string; onDone: () => vo
         </Field>
         <label className="flex items-center gap-2 self-end text-sm">
           <input name="approval" type="checkbox" defaultChecked /> Klant om goedkeuring vragen
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input name="final" type="checkbox" /> Definitief: zichtbaar voor uitvoerders
         </label>
         <div className="flex gap-3">
           <Button type="submit">Delen</Button>
