@@ -182,6 +182,17 @@ export const seed: AppState = {
       status: "wijziging-gevraagd",
       feedback: "Graag dimbare spots boven het kookeiland.",
     },
+    {
+      id: "d5",
+      projectId: "penthouse-rotterdam",
+      title: "Lichtplan werkkamer",
+      category: "tekening",
+      version: 2,
+      fileName: "PR_lichtplan_werkkamer_v2.pdf",
+      sizeKb: 980,
+      uploadedAt: "2026-09-26T15:20:00",
+      status: "goedgekeurd",
+    },
   ],
   products: [
     {

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import Logo from "@/components/Logo";
 import { setRole, setSupplierView } from "@/lib/actions";
@@ -19,6 +19,7 @@ export default function AppHeader() {
   const { role, suppliers, supplierView } = useAppState();
   const [confirmReset, setConfirmReset] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const nav = [
     { href: "/", label: "Projecten", active: !pathname.startsWith("/leveranciers") },
     { href: "/leveranciers", label: "Leveranciers", active: pathname.startsWith("/leveranciers") },
@@ -59,7 +60,11 @@ export default function AppHeader() {
               <button
                 key={r.id}
                 type="button"
-                onClick={() => setRole(r.id)}
+                onClick={() => {
+                  setRole(r.id);
+                  // Leveranciers hebben alleen hun eigen dashboard.
+                  if (r.id === "supplier") router.push("/");
+                }}
                 aria-pressed={role === r.id}
                 className={`rounded-full px-3 py-1 ${
                   role === r.id ? "bg-foreground text-background" : "text-muted hover:text-foreground"

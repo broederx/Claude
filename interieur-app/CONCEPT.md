@@ -22,7 +22,7 @@ PDF's in bijlagen en Excel-lijstjes.
 | --- | --- |
 | Studio (Janine, later medewerkers) | Projecten aanmaken, alles delen, fase bijwerken, facturen maken |
 | Klant (soms twee personen) | Eigen project(en) zien, reageren, goedkeuren, wensen invullen, betalen |
-| Leverancier | Alleen de eigen orders van de studio: bevestigen, leverdatum doorgeven, levering melden, berichten per order, eigen contactgegevens bijwerken. Geen klantnamen, verkoopprijzen of marges |
+| Leverancier | Alleen de eigen orders van de studio en de definitieve documentatie daarbij: bevestigen, leverdatum doorgeven, levering melden, berichten per order, eigen contactgegevens bijwerken. Geen klantnamen, verkoopprijzen of marges |
 | Later: aannemer | Alleen planning en relevante tekeningen per project |
 
 ## Onderdelen (in het prototype)
@@ -66,6 +66,13 @@ een leverdatum, wijzigen die zo nodig, melden de levering en sturen per order
 berichten. Een bevestiging of bericht verschijnt bij de studio als "Te doen".
 De leverancier ziet het afleveradres, maar niet de naam van de klant, het
 project, de verkoopprijs of andere leveranciers.
+
+Daarnaast ziet een leverancier de **definitieve documentatie** van de
+projecten waarvoor hij een order heeft: alleen documenten die de klant heeft
+goedgekeurd, nooit contracten, concepten of documenten waarover nog een
+wijziging loopt. De studio kan een definitief document per stuk afschermen
+voor leveranciers. Komt er een nieuwe versie ter goedkeuring, dan verdwijnt
+het document bij de leverancier tot de klant opnieuw akkoord geeft.
 
 Alles wat op een reactie wacht, verschijnt automatisch als "Te doen" op het
 dashboard en als teller op het tabblad.

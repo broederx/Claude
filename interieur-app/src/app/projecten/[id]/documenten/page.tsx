@@ -2,19 +2,14 @@
 
 import { useState, type FormEvent } from "react";
 import { addItem, patchItem } from "@/lib/actions";
+import { docCategories, supplierCanSee } from "@/lib/docs";
 import { fileSize, longDate } from "@/lib/format";
 import { useProject } from "@/lib/hooks";
 import { newId, nowIso } from "@/lib/store";
 import type { DocStatus, ProjectDoc } from "@/lib/types";
 import { Badge, Button, Card, Empty, Field, PageHeader, inputClass } from "@/components/ui";
 
-const categories: Record<ProjectDoc["category"], string> = {
-  tekening: "Tekening",
-  "3d": "3D-impressie",
-  contract: "Contract",
-  advies: "Advies",
-  overig: "Overig",
-};
+const categories = docCategories;
 
 const statusInfo: Record<DocStatus, { label: string; tone: "neutral" | "accent" | "sage" | "warn" }> = {
   info: { label: "Ter info", tone: "neutral" },
@@ -34,7 +29,11 @@ export default function DocumentenPage() {
     <div>
       <PageHeader
         title="Documenten"
-        intro="Tekeningen, impressies en afspraken, altijd in de laatste versie. Goedkeuringen worden vastgelegd."
+        intro={
+          role === "architect"
+            ? "Tekeningen, impressies en afspraken, altijd in de laatste versie. Leveranciers met een order zien alleen goedgekeurde documenten, nooit contracten."
+            : "Tekeningen, impressies en afspraken, altijd in de laatste versie. Goedkeuringen worden vastgelegd."
+        }
         action={role === "architect" && !uploading && <Button onClick={() => setUploading(true)}>+ Document delen</Button>}
       />
       {uploading && <UploadForm projectId={project.id} onDone={() => setUploading(false)} />}
@@ -73,6 +72,7 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <Badge tone={status.tone}>{status.label}</Badge>
+          {!isClient && supplierCanSee(doc) && <Badge>Zichtbaar voor leveranciers</Badge>}
           <Button variant="secondary" onClick={() => setViewing(!viewing)}>
             Bekijken
           </Button>
@@ -120,6 +120,17 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
             </div>
           )}
         </div>
+      )}
+
+      {!isClient && doc.status === "goedgekeurd" && doc.category !== "contract" && (
+        <label className="mt-4 flex items-center gap-2 border-t border-border pt-4 text-sm text-muted">
+          <input
+            type="checkbox"
+            checked={!doc.hiddenFromSuppliers}
+            onChange={(e) => patchItem("docs", doc.id, { hiddenFromSuppliers: !e.target.checked })}
+          />
+          Delen met leveranciers van dit project
+        </label>
       )}
 
       {!isClient && doc.status === "wijziging-gevraagd" && (

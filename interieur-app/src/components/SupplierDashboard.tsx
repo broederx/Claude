@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { openActions, patchItem } from "@/lib/actions";
-import { euro, longDate, today } from "@/lib/format";
+import { docCategories, supplierDocs } from "@/lib/docs";
+import { euro, fileSize, longDate, today } from "@/lib/format";
 import { setAppState, useAppState } from "@/lib/store";
 import { studio } from "@/lib/studio";
 import type { OrderStatus, PurchaseOrder, Supplier } from "@/lib/types";
@@ -116,7 +117,10 @@ export default function SupplierDashboard() {
           )}
         </section>
 
-        <CompanyDetails supplier={supplier} />
+        <div className="space-y-8">
+          <SupplierDocuments supplierId={supplier.id} />
+          <CompanyDetails supplier={supplier} />
+        </div>
       </div>
     </div>
   );
@@ -207,6 +211,50 @@ function OrderCard({ order: o, value }: { order: PurchaseOrder; value: number })
       )}
 
       <OrderThread order={o} role="supplier" counterpart={studio.name} />
+    </Card>
+  );
+}
+
+function SupplierDocuments({ supplierId }: { supplierId: string }) {
+  const state = useAppState();
+  const [open, setOpen] = useState<string | null>(null);
+  const groups = supplierDocs(state, supplierId).filter((g) => g.docs.length > 0);
+
+  return (
+    <Card className="h-fit space-y-4 p-6">
+      <div>
+        <h2 className="text-xs uppercase tracking-[0.2em] text-muted">Definitieve documentatie</h2>
+        <p className="mt-1 text-sm text-muted">Goedgekeurde tekeningen en impressies bij je orders.</p>
+      </div>
+      {groups.length === 0 ? (
+        <p className="text-sm text-muted">Er is nog geen definitieve documentatie gedeeld.</p>
+      ) : (
+        groups.map((group) => (
+          <div key={group.orderNumbers.join()} className="space-y-2">
+            <p className="text-xs text-muted">Bij order {group.orderNumbers.join(", ")}</p>
+            <ul className="space-y-2">
+              {group.docs.map((doc) => (
+                <li key={doc.id} className="rounded-xl border border-border p-3 text-sm">
+                  <button
+                    type="button"
+                    onClick={() => setOpen(open === doc.id ? null : doc.id)}
+                    aria-expanded={open === doc.id}
+                    className="w-full text-left"
+                  >
+                    <span className="block font-medium">{doc.title}</span>
+                    <span className="text-xs text-muted">
+                      {docCategories[doc.category]} · versie {doc.version} · {fileSize(doc.sizeKb)} · {longDate(doc.uploadedAt)}
+                    </span>
+                  </button>
+                  {open === doc.id && (
+                    <p className="mt-2 text-xs text-muted">In de echte app opent of download je hier {doc.fileName}.</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      )}
     </Card>
   );
 }
