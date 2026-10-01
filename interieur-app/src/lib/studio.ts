@@ -1,15 +1,17 @@
-// Gegevens van de studio. Pas deze aan naar je eigen bedrijf; ze komen terug
-// in de header, op offertes en op facturen.
+// Gegevens van de studio. Ze komen terug in de header, op offertes en op
+// facturen. Velden met "aanvullen" zijn nog voorbeeldwaarden.
 export const studio = {
-  name: "Studio Atelier",
-  tagline: "Interieurarchitectuur",
-  architect: "Lars Broeders",
-  email: "studio@voorbeeld.nl",
-  phone: "+31 6 12 34 56 78",
-  address: "Voorbeeldstraat 1, 1234 AB Amsterdam",
-  kvk: "12345678",
-  vatId: "NL001234567B01",
-  iban: "NL00 BANK 0123 4567 89",
+  name: "mim | interiors",
+  shortName: "mim",
+  tagline: "High end interieurarchitectuur",
+  architect: "Janine Slaats",
+  email: "info@miminteriors.com",
+  phone: "+31 6 55538028",
+  website: "miminteriors.com",
+  address: "Adres aanvullen",
+  kvk: "aanvullen",
+  vatId: "aanvullen",
+  iban: "(IBAN aanvullen)",
   paymentTermDays: 14,
 };
 
