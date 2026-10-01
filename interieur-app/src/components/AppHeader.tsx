@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Logo from "@/components/Logo";
-import { setRole } from "@/lib/actions";
+import { setRole, setSupplierView } from "@/lib/actions";
 import { resetAppState, useAppState } from "@/lib/store";
 import { studio } from "@/lib/studio";
 import type { Role } from "@/lib/types";
@@ -12,10 +12,11 @@ import type { Role } from "@/lib/types";
 const roles: { id: Role; label: string }[] = [
   { id: "architect", label: "Studio" },
   { id: "client", label: "Klant" },
+  { id: "supplier", label: "Leverancier" },
 ];
 
 export default function AppHeader() {
-  const { role } = useAppState();
+  const { role, suppliers, supplierView } = useAppState();
   const [confirmReset, setConfirmReset] = useState(false);
   const pathname = usePathname();
   const nav = [
@@ -31,7 +32,9 @@ export default function AppHeader() {
           <span className="font-serif text-2xl tracking-wide">
             mim <span className="text-muted">|</span> interiors
           </span>
-          <span className="hidden text-xs uppercase tracking-[0.2em] text-muted sm:inline">klantportaal</span>
+          <span className="hidden text-xs uppercase tracking-[0.2em] text-muted sm:inline">
+            {role === "supplier" ? "leveranciersportaal" : role === "client" ? "klantportaal" : "studio"}
+          </span>
         </Link>
 
         {role === "architect" && (
@@ -49,7 +52,7 @@ export default function AppHeader() {
           </nav>
         )}
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <span className="hidden text-xs text-muted md:inline">Bekijk als</span>
           <div className="flex rounded-full border border-border p-0.5 text-sm" role="group" aria-label="Weergave">
             {roles.map((r) => (
@@ -66,6 +69,20 @@ export default function AppHeader() {
               </button>
             ))}
           </div>
+          {role === "supplier" && (
+            <select
+              value={supplierView}
+              onChange={(e) => setSupplierView(e.target.value)}
+              aria-label="Ingelogd als leverancier"
+              className="rounded-full border border-border bg-surface px-2 py-1 text-sm"
+            >
+              {suppliers.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+          )}
           {confirmReset ? (
             <span className="flex items-center gap-2 text-xs">
               <span className="text-muted">Alles wissen?</span>

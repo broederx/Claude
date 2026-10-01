@@ -9,6 +9,7 @@ import { newId, useAppState } from "@/lib/store";
 import { studio } from "@/lib/studio";
 import type { Project } from "@/lib/types";
 import { Badge, Button, Card, Field, Swatches, inputClass } from "@/components/ui";
+import SupplierDashboard from "@/components/SupplierDashboard";
 
 export default function Dashboard() {
   const state = useAppState();
@@ -16,6 +17,8 @@ export default function Dashboard() {
   const actions = openActions(state, state.role).filter((a) => projects.some((p) => p.id === a.projectId));
   const isStudio = state.role === "architect";
   const [creating, setCreating] = useState(false);
+
+  if (state.role === "supplier") return <SupplierDashboard />;
 
   return (
     <div className="space-y-12">

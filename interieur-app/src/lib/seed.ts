@@ -1,10 +1,11 @@
 import type { AppState } from "./types";
 
-export const STATE_VERSION = 2;
+export const STATE_VERSION = 3;
 
 export const seed: AppState = {
   version: STATE_VERSION,
   role: "architect",
+  supplierView: "louis-poulsen",
   projects: [
     {
       id: "villa-wassenaar",
@@ -236,6 +237,19 @@ export const seed: AppState = {
       color: "#c9c2b2",
     },
     {
+      id: "p6",
+      projectId: "penthouse-rotterdam",
+      room: "Werkkamer",
+      name: "Bureaulamp Panthella Mini, opaal",
+      supplierId: "louis-poulsen",
+      purchasePrice: 395,
+      price: 495,
+      qty: 2,
+      leadTimeWeeks: 3,
+      status: "besteld",
+      color: "#ece8e1",
+    },
+    {
       id: "p5",
       projectId: "villa-wassenaar",
       room: "Badkamer",
@@ -370,6 +384,7 @@ export const seed: AppState = {
       expectedDelivery: "2026-09-20",
       deliverTo: "studio",
       status: "geleverd",
+      thread: [],
     },
     {
       id: "o2",
@@ -381,6 +396,21 @@ export const seed: AppState = {
       expectedDelivery: "2026-10-21",
       deliverTo: "project",
       status: "bevestigd",
+      thread: [
+        { id: "ot1", author: "supplier", text: "Order bevestigd. Levering in week 43 op het projectadres.", at: "2026-09-23T10:15:00" },
+        { id: "ot2", author: "architect", text: "Dank je. Graag een dag van tevoren bellen, de aannemer is dan op locatie.", at: "2026-09-23T11:02:00" },
+      ],
+    },
+    {
+      id: "o3",
+      number: "IO-2026-010",
+      supplierId: "louis-poulsen",
+      projectId: "penthouse-rotterdam",
+      productIds: ["p6"],
+      date: "2026-09-30",
+      deliverTo: "studio",
+      status: "verstuurd",
+      thread: [],
     },
   ],
   lastRead: {

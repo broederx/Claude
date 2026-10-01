@@ -6,9 +6,9 @@ import { demoClientEmail } from "./studio";
 import type { AppState } from "./types";
 
 export function visibleProjects(state: AppState) {
-  return state.role === "architect"
-    ? state.projects
-    : state.projects.filter((p) => p.clientEmail === demoClientEmail);
+  if (state.role === "architect") return state.projects;
+  if (state.role === "client") return state.projects.filter((p) => p.clientEmail === demoClientEmail);
+  return [];
 }
 
 // Huidig project uit de URL, of undefined als het niet bestaat of de klant

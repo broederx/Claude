@@ -22,7 +22,8 @@ PDF's in bijlagen en Excel-lijstjes.
 | --- | --- |
 | Studio (Janine, later medewerkers) | Projecten aanmaken, alles delen, fase bijwerken, facturen maken |
 | Klant (soms twee personen) | Eigen project(en) zien, reageren, goedkeuren, wensen invullen, betalen |
-| Later: aannemer/leverancier | Alleen planning en relevante tekeningen per project |
+| Leverancier | Alleen de eigen orders van de studio: bevestigen, leverdatum doorgeven, levering melden, berichten per order, eigen contactgegevens bijwerken. Geen klantnamen, verkoopprijzen of marges |
+| Later: aannemer | Alleen planning en relevante tekeningen per project |
 
 ## Onderdelen (in het prototype)
 
@@ -58,6 +59,13 @@ van de klantkant:
   gescheiden blijven. Een order gaat van verstuurd via bevestigd naar
   geleverd, met een verwachte leverdatum en een afleveradres (project of
   studio).
+
+**Leveranciersportaal.** Leveranciers loggen zelf in en zien een eigen
+dashboard met alleen hun orders van de studio. Ze bevestigen nieuwe orders met
+een leverdatum, wijzigen die zo nodig, melden de levering en sturen per order
+berichten. Een bevestiging of bericht verschijnt bij de studio als "Te doen".
+De leverancier ziet het afleveradres, maar niet de naam van de klant, het
+project, de verkoopprijs of andere leveranciers.
 
 Alles wat op een reactie wacht, verschijnt automatisch als "Te doen" op het
 dashboard en als teller op het tabblad.

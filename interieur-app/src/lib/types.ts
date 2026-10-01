@@ -1,4 +1,4 @@
-export type Role = "architect" | "client";
+export type Role = "architect" | "client" | "supplier";
 
 export type Phase =
   | "kennismaking"
@@ -95,6 +95,8 @@ export interface PurchaseOrder {
   expectedDelivery?: string;
   deliverTo: "project" | "studio";
   status: OrderStatus;
+  // Berichten tussen studio en leverancier over deze order.
+  thread: Comment[];
 }
 
 export interface Product {
@@ -155,6 +157,8 @@ export interface Invoice {
 export interface AppState {
   version: number;
   role: Role;
+  // Welke leverancier "ingelogd" is in de leveranciersweergave van het prototype.
+  supplierView: string;
   projects: Project[];
   mood: MoodItem[];
   briefings: Briefing[];
@@ -165,5 +169,5 @@ export interface AppState {
   invoices: Invoice[];
   suppliers: Supplier[];
   orders: PurchaseOrder[];
-  lastRead: Record<string, Record<Role, string>>;
+  lastRead: Record<string, Partial<Record<Role, string>>>;
 }
