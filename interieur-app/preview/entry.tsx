@@ -14,6 +14,7 @@ import FinancienPage from "@/app/projecten/[id]/financien/page";
 import InvoicePage from "@/app/projecten/[id]/financien/[invoiceId]/page";
 import LeveranciersPage from "@/app/leveranciers/page";
 import SupplierPage from "@/app/leveranciers/[supplierId]/page";
+import UitvoerdersPage from "@/app/uitvoerders/page";
 import { usePath } from "./shims/router";
 
 const sections: Record<string, () => ReactNode> = {
@@ -31,6 +32,7 @@ function Page() {
   const path = usePath();
   const [, first, second, section = "", invoiceId] = path.split("/");
   if (first === "leveranciers") return second ? <SupplierPage key={path} /> : <LeveranciersPage />;
+  if (first === "uitvoerders") return <UitvoerdersPage />;
   if (first !== "projecten") return <Dashboard />;
   const Section = invoiceId ? InvoicePage : (sections[section] ?? ProjectOverview);
   // De layout verwacht Next-props; in de preview halen alle pagina's hun

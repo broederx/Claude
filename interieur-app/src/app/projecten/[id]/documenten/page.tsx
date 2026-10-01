@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { addItem, patchItem } from "@/lib/actions";
-import { docCategories, supplierCanSee } from "@/lib/docs";
+import { contractorCanSee, docCategories } from "@/lib/docs";
 import { fileSize, longDate } from "@/lib/format";
 import { useProject } from "@/lib/hooks";
 import { newId, nowIso } from "@/lib/store";
@@ -31,7 +31,7 @@ export default function DocumentenPage() {
         title="Documenten"
         intro={
           role === "architect"
-            ? "Tekeningen, impressies en afspraken, altijd in de laatste versie. Leveranciers met een order zien alleen goedgekeurde documenten, nooit contracten."
+            ? "Tekeningen, impressies en afspraken, altijd in de laatste versie. Uitvoerders van dit project zien alleen goedgekeurde documenten, nooit contracten."
             : "Tekeningen, impressies en afspraken, altijd in de laatste versie. Goedkeuringen worden vastgelegd."
         }
         action={role === "architect" && !uploading && <Button onClick={() => setUploading(true)}>+ Document delen</Button>}
@@ -72,7 +72,7 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <Badge tone={status.tone}>{status.label}</Badge>
-          {!isClient && supplierCanSee(doc) && <Badge>Zichtbaar voor leveranciers</Badge>}
+          {!isClient && contractorCanSee(doc) && <Badge>Zichtbaar voor uitvoerders</Badge>}
           <Button variant="secondary" onClick={() => setViewing(!viewing)}>
             Bekijken
           </Button>
@@ -126,10 +126,10 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
         <label className="mt-4 flex items-center gap-2 border-t border-border pt-4 text-sm text-muted">
           <input
             type="checkbox"
-            checked={!doc.hiddenFromSuppliers}
-            onChange={(e) => patchItem("docs", doc.id, { hiddenFromSuppliers: !e.target.checked })}
+            checked={!doc.hiddenFromContractors}
+            onChange={(e) => patchItem("docs", doc.id, { hiddenFromContractors: !e.target.checked })}
           />
-          Delen met leveranciers van dit project
+          Delen met uitvoerders van dit project
         </label>
       )}
 

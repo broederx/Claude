@@ -13,10 +13,11 @@ type Collection =
   | "messages"
   | "invoices"
   | "suppliers"
-  | "orders";
+  | "orders"
+  | "contractors";
 
-export function setSupplierView(supplierView: string) {
-  setAppState((s) => ({ ...s, supplierView }));
+export function setContractorView(contractorView: string) {
+  setAppState((s) => ({ ...s, contractorView }));
 }
 type Item<K extends Collection> = AppState[K][number];
 
@@ -61,19 +62,8 @@ export function openActions(state: AppState, role: Role, projectId?: string): Op
   const actions: OpenAction[] = [];
   const now = today();
 
-  if (role === "supplier") {
-    for (const order of state.orders.filter((o) => o.supplierId === state.supplierView)) {
-      if (order.status === "verstuurd") {
-        actions.push({ projectId: order.projectId, label: `Nieuwe order ${order.number} bevestigen`, href: `#${order.id}` });
-      } else if (order.status === "bevestigd" && !order.expectedDelivery) {
-        actions.push({ projectId: order.projectId, label: `Leverdatum doorgeven voor ${order.number}`, href: `#${order.id}` });
-      }
-      if (order.thread.at(-1)?.author === "architect") {
-        actions.push({ projectId: order.projectId, label: `Bericht van de studio over ${order.number}`, href: `#${order.id}` });
-      }
-    }
-    return actions;
-  }
+  // Uitvoerders hebben geen actiepunten; zij bekijken alleen documenten.
+  if (role === "contractor") return actions;
 
   for (const msgProject of new Set(inScope(state.messages).map((m) => m.projectId))) {
     const lastRead = state.lastRead[msgProject]?.[role] ?? "";
@@ -126,14 +116,6 @@ export function openActions(state: AppState, role: Role, projectId?: string): Op
     }
     for (const inv of inScope(state.invoices).filter((i) => i.status === "verzonden" && i.kind === "factuur" && i.dueDate < now)) {
       actions.push({ projectId: inv.projectId, label: `Factuur ${inv.number} is over de vervaldatum`, href: `${base(inv.projectId)}/financien/${inv.id}` });
-    }
-    for (const order of inScope(state.orders).filter((o) => o.thread.at(-1)?.author === "supplier" && o.status !== "geleverd")) {
-      const supplier = state.suppliers.find((s) => s.id === order.supplierId);
-      actions.push({
-        projectId: order.projectId,
-        label: `Bericht van ${supplier?.name ?? "leverancier"} over ${order.number}`,
-        href: `/leveranciers/${order.supplierId}`,
-      });
     }
     for (const p of inScope(state.products).filter((p) => p.status === "goedgekeurd")) {
       const supplier = state.suppliers.find((s) => s.id === p.supplierId);

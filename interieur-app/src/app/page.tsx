@@ -9,7 +9,7 @@ import { newId, useAppState } from "@/lib/store";
 import { studio } from "@/lib/studio";
 import type { Project } from "@/lib/types";
 import { Badge, Button, Card, Field, Swatches, inputClass } from "@/components/ui";
-import SupplierDashboard from "@/components/SupplierDashboard";
+import ContractorDashboard from "@/components/ContractorDashboard";
 
 export default function Dashboard() {
   const state = useAppState();
@@ -18,7 +18,7 @@ export default function Dashboard() {
   const isStudio = state.role === "architect";
   const [creating, setCreating] = useState(false);
 
-  if (state.role === "supplier") return <SupplierDashboard />;
+  if (state.role === "contractor") return <ContractorDashboard />;
 
   return (
     <div className="space-y-12">

@@ -1,11 +1,11 @@
 import type { AppState } from "./types";
 
-export const STATE_VERSION = 3;
+export const STATE_VERSION = 4;
 
 export const seed: AppState = {
   version: STATE_VERSION,
   role: "architect",
-  supplierView: "louis-poulsen",
+  contractorView: "van-dijk",
   projects: [
     {
       id: "villa-wassenaar",
@@ -395,7 +395,6 @@ export const seed: AppState = {
       expectedDelivery: "2026-09-20",
       deliverTo: "studio",
       status: "geleverd",
-      thread: [],
     },
     {
       id: "o2",
@@ -407,10 +406,6 @@ export const seed: AppState = {
       expectedDelivery: "2026-10-21",
       deliverTo: "project",
       status: "bevestigd",
-      thread: [
-        { id: "ot1", author: "supplier", text: "Order bevestigd. Levering in week 43 op het projectadres.", at: "2026-09-23T10:15:00" },
-        { id: "ot2", author: "architect", text: "Dank je. Graag een dag van tevoren bellen, de aannemer is dan op locatie.", at: "2026-09-23T11:02:00" },
-      ],
     },
     {
       id: "o3",
@@ -421,7 +416,35 @@ export const seed: AppState = {
       date: "2026-09-30",
       deliverTo: "studio",
       status: "verstuurd",
-      thread: [],
+    },
+  ],
+  contractors: [
+    {
+      id: "van-dijk",
+      name: "Bouwbedrijf Van Dijk",
+      trade: "Aannemer",
+      contactName: "Pieter van Dijk",
+      email: "planning@voorbeeld-vandijk.nl",
+      phone: "+31 70 000 00 11",
+      projectIds: ["villa-wassenaar"],
+    },
+    {
+      id: "de-kwast",
+      name: "Schildersbedrijf De Kwast",
+      trade: "Schilder & stucwerk",
+      contactName: "Anouk Smit",
+      email: "info@voorbeeld-dekwast.nl",
+      phone: "+31 70 000 00 12",
+      projectIds: ["villa-wassenaar", "penthouse-rotterdam"],
+    },
+    {
+      id: "elektro-bos",
+      name: "Elektro Bos",
+      trade: "Elektricien",
+      contactName: "Daan Bos",
+      email: "werk@voorbeeld-elektrobos.nl",
+      phone: "+31 10 000 00 13",
+      projectIds: ["penthouse-rotterdam"],
     },
   ],
   lastRead: {

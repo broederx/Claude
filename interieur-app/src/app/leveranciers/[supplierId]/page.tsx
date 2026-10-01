@@ -8,7 +8,6 @@ import { euro, longDate, today } from "@/lib/format";
 import { newId, setAppState, useAppState } from "@/lib/store";
 import type { OrderStatus, Product, PurchaseOrder } from "@/lib/types";
 import { Badge, Button, Card, Empty, Field, inputClass } from "@/components/ui";
-import OrderThread from "@/components/OrderThread";
 import StudioOnly from "@/components/StudioOnly";
 
 const orderStatus: Record<OrderStatus, { label: string; tone: "neutral" | "accent" | "sage" }> = {
@@ -70,7 +69,6 @@ export default function SupplierPage() {
         date: today(),
         deliverTo,
         status: "verstuurd",
-        thread: [],
       };
       all = [...all, order];
       addItem("orders", order);
@@ -217,7 +215,6 @@ export default function SupplierPage() {
                           </li>
                         ))}
                       </ul>
-                      <OrderThread order={o} role="architect" counterpart={supplier.name} />
                       {o.status !== "geleverd" && (
                         <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-border pt-4">
                           {o.status === "verstuurd" && (

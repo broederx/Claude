@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import Logo from "@/components/Logo";
-import { setRole, setSupplierView } from "@/lib/actions";
+import { setContractorView, setRole } from "@/lib/actions";
 import { resetAppState, useAppState } from "@/lib/store";
 import { studio } from "@/lib/studio";
 import type { Role } from "@/lib/types";
@@ -12,17 +12,18 @@ import type { Role } from "@/lib/types";
 const roles: { id: Role; label: string }[] = [
   { id: "architect", label: "Studio" },
   { id: "client", label: "Klant" },
-  { id: "supplier", label: "Leverancier" },
+  { id: "contractor", label: "Uitvoerder" },
 ];
 
 export default function AppHeader() {
-  const { role, suppliers, supplierView } = useAppState();
+  const { role, contractors, contractorView } = useAppState();
   const [confirmReset, setConfirmReset] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const nav = [
-    { href: "/", label: "Projecten", active: !pathname.startsWith("/leveranciers") },
+    { href: "/", label: "Projecten", active: pathname === "/" || pathname.startsWith("/projecten") },
     { href: "/leveranciers", label: "Leveranciers", active: pathname.startsWith("/leveranciers") },
+    { href: "/uitvoerders", label: "Uitvoerders", active: pathname.startsWith("/uitvoerders") },
   ];
 
   return (
@@ -34,7 +35,7 @@ export default function AppHeader() {
             mim <span className="text-muted">|</span> interiors
           </span>
           <span className="hidden text-xs uppercase tracking-[0.2em] text-muted sm:inline">
-            {role === "supplier" ? "leveranciersportaal" : role === "client" ? "klantportaal" : "studio"}
+            {role === "contractor" ? "uitvoerders" : role === "client" ? "klantportaal" : "studio"}
           </span>
         </Link>
 
@@ -62,8 +63,8 @@ export default function AppHeader() {
                 type="button"
                 onClick={() => {
                   setRole(r.id);
-                  // Leveranciers hebben alleen hun eigen dashboard.
-                  if (r.id === "supplier") router.push("/");
+                  // Uitvoerders hebben alleen hun eigen documentenoverzicht.
+                  if (r.id === "contractor") router.push("/");
                 }}
                 aria-pressed={role === r.id}
                 className={`rounded-full px-3 py-1 ${
@@ -74,14 +75,14 @@ export default function AppHeader() {
               </button>
             ))}
           </div>
-          {role === "supplier" && (
+          {role === "contractor" && (
             <select
-              value={supplierView}
-              onChange={(e) => setSupplierView(e.target.value)}
-              aria-label="Ingelogd als leverancier"
+              value={contractorView}
+              onChange={(e) => setContractorView(e.target.value)}
+              aria-label="Ingelogd als uitvoerder"
               className="rounded-full border border-border bg-surface px-2 py-1 text-sm"
             >
-              {suppliers.map((s) => (
+              {contractors.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.name}
                 </option>

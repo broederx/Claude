@@ -1,4 +1,4 @@
-export type Role = "architect" | "client" | "supplier";
+export type Role = "architect" | "client" | "contractor";
 
 export type Phase =
   | "kennismaking"
@@ -64,8 +64,8 @@ export interface ProjectDoc {
   uploadedAt: string;
   status: DocStatus;
   feedback?: string;
-  // Studio kan een definitief document afschermen voor leveranciers.
-  hiddenFromSuppliers?: boolean;
+  // Studio kan een definitief document afschermen voor uitvoerders.
+  hiddenFromContractors?: boolean;
 }
 
 export type ProductStatus = "voorstel" | "goedgekeurd" | "afgewezen" | "besteld" | "geleverd";
@@ -97,8 +97,18 @@ export interface PurchaseOrder {
   expectedDelivery?: string;
   deliverTo: "project" | "studio";
   status: OrderStatus;
-  // Berichten tussen studio en leverancier over deze order.
-  thread: Comment[];
+}
+
+// Uitvoerder (aannemer, schilder, elektricien…). Ziet alleen de definitieve
+// documentatie van de projecten waar de studio toegang toe geeft.
+export interface Contractor {
+  id: string;
+  name: string;
+  trade: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  projectIds: string[];
 }
 
 export interface Product {
@@ -159,8 +169,8 @@ export interface Invoice {
 export interface AppState {
   version: number;
   role: Role;
-  // Welke leverancier "ingelogd" is in de leveranciersweergave van het prototype.
-  supplierView: string;
+  // Welke uitvoerder "ingelogd" is in de uitvoerdersweergave van het prototype.
+  contractorView: string;
   projects: Project[];
   mood: MoodItem[];
   briefings: Briefing[];
@@ -171,5 +181,6 @@ export interface AppState {
   invoices: Invoice[];
   suppliers: Supplier[];
   orders: PurchaseOrder[];
+  contractors: Contractor[];
   lastRead: Record<string, Partial<Record<Role, string>>>;
 }

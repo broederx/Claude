@@ -22,8 +22,7 @@ PDF's in bijlagen en Excel-lijstjes.
 | --- | --- |
 | Studio (Janine, later medewerkers) | Projecten aanmaken, alles delen, fase bijwerken, facturen maken |
 | Klant (soms twee personen) | Eigen project(en) zien, reageren, goedkeuren, wensen invullen, betalen |
-| Leverancier | Alleen de eigen orders van de studio en de definitieve documentatie daarbij: bevestigen, leverdatum doorgeven, levering melden, berichten per order, eigen contactgegevens bijwerken. Geen klantnamen, verkoopprijzen of marges |
-| Later: aannemer | Alleen planning en relevante tekeningen per project |
+| Uitvoerder (aannemer, schilder, elektricien…) | Alleen de definitieve documentatie van de projecten waar de studio toegang toe geeft. Geen klantgegevens, prijzen, orders, planning of berichten |
 
 ## Onderdelen (in het prototype)
 
@@ -60,19 +59,15 @@ van de klantkant:
   geleverd, met een verwachte leverdatum en een afleveradres (project of
   studio).
 
-**Leveranciersportaal.** Leveranciers loggen zelf in en zien een eigen
-dashboard met alleen hun orders van de studio. Ze bevestigen nieuwe orders met
-een leverdatum, wijzigen die zo nodig, melden de levering en sturen per order
-berichten. Een bevestiging of bericht verschijnt bij de studio als "Te doen".
-De leverancier ziet het afleveradres, maar niet de naam van de klant, het
-project, de verkoopprijs of andere leveranciers.
+Leveranciers hebben geen eigen inlog; orders lopen via de studio.
 
-Daarnaast ziet een leverancier de **definitieve documentatie** van de
-projecten waarvoor hij een order heeft: alleen documenten die de klant heeft
-goedgekeurd, nooit contracten, concepten of documenten waarover nog een
-wijziging loopt. De studio kan een definitief document per stuk afschermen
-voor leveranciers. Komt er een nieuwe versie ter goedkeuring, dan verdwijnt
-het document bij de leverancier tot de klant opnieuw akkoord geeft.
+**Uitvoerders.** Aannemers, schilders, elektriciens en andere vakmensen loggen
+zelf in en zien **alleen de definitieve documentatie** van de projecten die de
+studio voor hen aanvinkt, met projectnaam en adres. Definitief betekent:
+goedgekeurd door de klant, nooit contracten, concepten of documenten waarover
+nog een wijziging loopt. De studio kan een definitief document per stuk
+afschermen. Komt er een nieuwe versie ter goedkeuring, dan verdwijnt het
+document bij de uitvoerder tot de klant opnieuw akkoord geeft.
 
 Alles wat op een reactie wacht, verschijnt automatisch als "Te doen" op het
 dashboard en als teller op het tabblad.
@@ -90,8 +85,6 @@ dashboard en als teller op het tabblad.
 - **Uren registreren** per project en fase, automatisch naar een factuur.
 - **Opleverdossier.** Na afloop één PDF met alle producten,
   onderhoudsadviezen, garanties en leveranciers. Een mooi afscheidscadeau.
-- **Partners.** Aannemer, schilder en leveranciers met een beperkte
-  weergave.
 - **Notificaties** per e-mail en push (app op het beginscherm, PWA).
 - **Digitaal ondertekenen** van de overeenkomst van opdracht.
 - **Portfolio-koppeling.** Na oplevering, met toestemming, het project als
@@ -106,7 +99,7 @@ dashboard en als teller op het tabblad.
 | 1. Prototype *(nu)* | Klikbaar, met voorbeelddata in de browser | Vorm en functies toetsen, laten zien aan een paar vaste klanten |
 | 2. MVP | Inloggen, echte opslag, uploads, berichten, documenten, moodboard, wensen | Eerste echte project erin draaien |
 | 3. Financieel | Offertes en facturen, iDEAL via Mollie, koppeling met de boekhouding | Facturen niet meer dubbel maken |
-| 4. Uitbreiding | Partners, opleverdossier, push-notificaties, markeren op tekeningen | Volledige projectflow in de app |
+| 4. Uitbreiding | Opleverdossier, push-notificaties, markeren op tekeningen | Volledige projectflow in de app |
 
 ## Techniek (advies voor fase 2)
 

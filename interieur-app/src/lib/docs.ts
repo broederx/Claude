@@ -8,19 +8,22 @@ export const docCategories: Record<ProjectDoc["category"], string> = {
   overig: "Overig",
 };
 
-// Leveranciers zien alleen definitieve documentatie: goedgekeurd door de klant,
+// Uitvoerders zien alleen definitieve documentatie: goedgekeurd door de klant,
 // geen contracten, en niet door de studio afgeschermd.
-export function supplierCanSee(doc: ProjectDoc) {
-  return doc.status === "goedgekeurd" && doc.category !== "contract" && !doc.hiddenFromSuppliers;
+export function contractorCanSee(doc: ProjectDoc) {
+  return doc.status === "goedgekeurd" && doc.category !== "contract" && !doc.hiddenFromContractors;
 }
 
-// Definitieve documenten van projecten waarvoor deze leverancier een order heeft.
-export function supplierDocs(state: AppState, supplierId: string) {
-  const orders = state.orders.filter((o) => o.supplierId === supplierId);
-  return [...new Set(orders.map((o) => o.projectId))].map((projectId) => ({
-    orderNumbers: orders.filter((o) => o.projectId === projectId).map((o) => o.number),
-    docs: state.docs
-      .filter((d) => d.projectId === projectId && supplierCanSee(d))
-      .sort((a, b) => b.uploadedAt.localeCompare(a.uploadedAt)),
-  }));
+// Projecten waar de uitvoerder toegang toe heeft, met hun definitieve documenten.
+export function contractorProjects(state: AppState, contractorId: string) {
+  const contractor = state.contractors.find((c) => c.id === contractorId);
+  if (!contractor) return [];
+  return state.projects
+    .filter((p) => contractor.projectIds.includes(p.id))
+    .map((project) => ({
+      project,
+      docs: state.docs
+        .filter((d) => d.projectId === project.id && contractorCanSee(d))
+        .sort((a, b) => b.uploadedAt.localeCompare(a.uploadedAt)),
+    }));
 }
