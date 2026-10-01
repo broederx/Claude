@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import Logo from "@/components/Logo";
 import { setRole } from "@/lib/actions";
 import { resetAppState, useAppState } from "@/lib/store";
@@ -14,6 +15,7 @@ const roles: { id: Role; label: string }[] = [
 
 export default function AppHeader() {
   const { role } = useAppState();
+  const [confirmReset, setConfirmReset] = useState(false);
 
   return (
     <header className="border-b border-border bg-surface/80 backdrop-blur print:hidden">
@@ -43,16 +45,33 @@ export default function AppHeader() {
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              if (window.confirm("Alle wijzigingen wissen en de voorbeelddata terugzetten?")) resetAppState();
-            }}
-            className="text-xs text-muted underline-offset-4 hover:underline"
-            title={`Prototype van ${studio.name}: data staat alleen in deze browser`}
-          >
-            Reset demo
-          </button>
+          {confirmReset ? (
+            <span className="flex items-center gap-2 text-xs">
+              <span className="text-muted">Alles wissen?</span>
+              <button
+                type="button"
+                onClick={() => {
+                  resetAppState();
+                  setConfirmReset(false);
+                }}
+                className="text-warn underline underline-offset-4"
+              >
+                Ja, reset
+              </button>
+              <button type="button" onClick={() => setConfirmReset(false)} className="text-muted hover:text-foreground">
+                Nee
+              </button>
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setConfirmReset(true)}
+              className="text-xs text-muted underline-offset-4 hover:underline"
+              title={`Prototype van ${studio.name}: data staat alleen in deze browser`}
+            >
+              Reset demo
+            </button>
+          )}
         </div>
       </div>
     </header>

@@ -39,9 +39,11 @@ export default function InvoicePage() {
           ← Alle offertes &amp; facturen
         </Link>
         <div className="flex flex-wrap gap-2">
-          <Button variant="secondary" onClick={() => window.print()}>
-            Download PDF
-          </Button>
+          {process.env.NEXT_PUBLIC_EMBED !== "1" && (
+            <Button variant="secondary" onClick={() => window.print()}>
+              Download PDF
+            </Button>
+          )}
           {role === "architect" && invoice.status === "concept" && (
             <>
               <Button variant="ghost" onClick={() => removeItem("invoices", invoice.id)}>

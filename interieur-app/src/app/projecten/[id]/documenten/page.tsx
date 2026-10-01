@@ -54,6 +54,7 @@ export default function DocumentenPage() {
 function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
   const [feedback, setFeedback] = useState("");
   const [asking, setAsking] = useState(false);
+  const [viewing, setViewing] = useState(false);
   const status = statusInfo[doc.status];
 
   return (
@@ -72,11 +73,17 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <Badge tone={status.tone}>{status.label}</Badge>
-          <Button variant="secondary" onClick={() => alert(`In de echte app opent nu ${doc.fileName}.`)}>
+          <Button variant="secondary" onClick={() => setViewing(!viewing)}>
             Bekijken
           </Button>
         </div>
       </div>
+
+      {viewing && (
+        <p className="mt-4 rounded-xl bg-background p-3 text-sm text-muted">
+          In de echte app opent hier {doc.fileName}, met de mogelijkheid om op de tekening te reageren.
+        </p>
+      )}
 
       {doc.feedback && (
         <p className="mt-4 rounded-xl bg-background p-3 text-sm">

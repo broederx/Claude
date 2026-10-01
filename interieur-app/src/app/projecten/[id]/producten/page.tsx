@@ -80,6 +80,8 @@ export default function ProductenPage() {
 function ProductRow({ product: p, isClient }: { product: Product; isClient: boolean }) {
   const status = statusInfo[p.status];
   const next = nextStatus[p.status];
+  const [declining, setDeclining] = useState(false);
+  const [note, setNote] = useState("");
 
   return (
     <div className="flex flex-col gap-4 p-5 md:flex-row md:items-center">
@@ -93,17 +95,32 @@ function ProductRow({ product: p, isClient }: { product: Product; isClient: bool
       </div>
       <p className="font-serif text-xl md:w-32 md:text-right">{euro(p.price * p.qty)}</p>
       <div className="flex flex-wrap items-center gap-2 md:w-64 md:justify-end">
-        {isClient && p.status === "voorstel" ? (
+        {isClient && p.status === "voorstel" && declining ? (
+          <form
+            className="flex w-full gap-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              patchItem("products", p.id, { status: "afgewezen", clientNote: note.trim() || undefined });
+            }}
+          >
+            <input
+              autoFocus
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Wat past er niet? (optioneel)"
+              aria-label={`Waarom niet: ${p.name}`}
+              className={inputClass}
+            />
+            <Button type="submit">Versturen</Button>
+          </form>
+        ) : isClient && p.status === "voorstel" ? (
           <>
             <Button onClick={() => patchItem("products", p.id, { status: "goedgekeurd", clientNote: undefined })}>
               Goedkeuren
             </Button>
             <Button
               variant="secondary"
-              onClick={() => {
-                const note = window.prompt("Wat past er niet? (optioneel)") ?? "";
-                patchItem("products", p.id, { status: "afgewezen", clientNote: note || undefined });
-              }}
+              onClick={() => setDeclining(true)}
             >
               Liever niet
             </Button>
