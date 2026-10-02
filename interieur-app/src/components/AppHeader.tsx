@@ -22,7 +22,6 @@ export default function AppHeader() {
   const router = useRouter();
   const nav = [
     { href: "/", label: "Projecten", active: pathname === "/" || pathname.startsWith("/projecten") },
-    { href: "/leveranciers", label: "Leveranciers", active: pathname.startsWith("/leveranciers") },
     { href: "/uitvoerders", label: "Uitvoerders", active: pathname.startsWith("/uitvoerders") },
   ];
 

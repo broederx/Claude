@@ -24,7 +24,6 @@ export function usePath() {
 
 export function paramsFor(current: string): Record<string, string> {
   const [, first, id, , invoiceId] = current.split("/");
-  if (first === "leveranciers" && id) return { supplierId: id };
   if (first !== "projecten" || !id) return {};
   return invoiceId ? { id, invoiceId } : { id };
 }

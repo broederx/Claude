@@ -12,8 +12,6 @@ type Collection =
   | "milestones"
   | "messages"
   | "invoices"
-  | "suppliers"
-  | "orders"
   | "contractors";
 
 export function setContractorView(contractorView: string) {
@@ -118,12 +116,7 @@ export function openActions(state: AppState, role: Role, projectId?: string): Op
       actions.push({ projectId: inv.projectId, label: `Factuur ${inv.number} is over de vervaldatum`, href: `${base(inv.projectId)}/financien/${inv.id}` });
     }
     for (const p of inScope(state.products).filter((p) => p.status === "goedgekeurd")) {
-      const supplier = state.suppliers.find((s) => s.id === p.supplierId);
-      actions.push({
-        projectId: p.projectId,
-        label: `Bestellen bij ${supplier?.name ?? "leverancier"}: ${p.name}`,
-        href: `/leveranciers/${p.supplierId}`,
-      });
+      actions.push({ projectId: p.projectId, label: `Bestellen: ${p.name}`, href: `${base(p.projectId)}/producten` });
     }
   }
 

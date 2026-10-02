@@ -22,7 +22,7 @@ PDF's in bijlagen en Excel-lijstjes.
 | --- | --- |
 | Studio (Janine, later medewerkers) | Projecten aanmaken, alles delen, fase bijwerken, facturen maken |
 | Klant (soms twee personen) | Eigen project(en) zien, reageren, goedkeuren, wensen invullen, betalen |
-| Uitvoerder (aannemer, schilder, elektricien…) | Alleen de documenten en tekeningen die de studio als definitief aanvinkt, van de projecten waar de studio toegang toe geeft. Geen klantgegevens, prijzen, orders, planning of berichten |
+| Uitvoerder (aannemer, schilder, elektricien…) | Alleen de documenten en tekeningen die de studio als definitief aanvinkt, van de projecten waar de studio toegang toe geeft. Geen klantgegevens, prijzen, planning of berichten |
 
 ## Onderdelen (in het prototype)
 
@@ -37,29 +37,12 @@ PDF's in bijlagen en Excel-lijstjes.
 4. **Documenten.** Tekeningen, 3D-impressies, contracten en adviezen met
    versiebeheer. De klant keurt goed of vraagt een wijziging; de studio deelt
    een nieuwe versie.
-5. **Producten & budget.** De inkooplijst per ruimte met leverancier, prijs en
-   levertijd. Status: voorstel → goedgekeurd → besteld → geleverd. Budget,
+5. **Producten & budget.** De inkooplijst per ruimte met prijs en levertijd. Status: voorstel → goedgekeurd → besteld → geleverd. Budget,
    goedgekeurd, in voorstel en nog beschikbaar staan altijd bovenaan.
 6. **Planning.** Afspraken, mijlpalen en leveringen op een tijdlijn.
 7. **Berichten.** Een chat per project, met ongelezen-tellers.
 8. **Offertes & facturen.** Offertes accepteren, facturen met btw-berekening,
    doorlopende nummering, betalen met iDEAL (gesimuleerd), opslaan als PDF.
-
-**Leveranciers (alleen studio).** Een apart onderdeel, volledig gescheiden
-van de klantkant:
-
-- Een overzicht van leveranciers met contactpersoon, dealernummer, korting,
-  voorwaarden en interne notities.
-- Per product legt de studio de leverancier en de inkoopprijs vast. De klant
-  ziet alleen de verkoopprijs, nooit de leverancier, de inkoopprijs of de
-  marge.
-- Goedgekeurde producten bestel je per leverancier met een inkooporder. Er
-  komt één order per project, zodat kosten en leveringen per project
-  gescheiden blijven. Een order gaat van verstuurd via bevestigd naar
-  geleverd, met een verwachte leverdatum en een afleveradres (project of
-  studio).
-
-Leveranciers hebben geen eigen inlog; orders lopen via de studio.
 
 **Uitvoerders.** Aannemers, schilders, elektriciens en andere vakmensen loggen
 zelf in en zien **alleen de documenten en tekeningen die de studio als
