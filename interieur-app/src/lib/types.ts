@@ -69,6 +69,37 @@ export interface ProjectDoc {
   final?: boolean;
 }
 
+export interface ChoiceOption {
+  id: string;
+  label: string;
+  description: string;
+  colors: string[];
+  priceDelta: number;
+}
+
+// Een ontwerpkeuze is altijd binair: kies A, B of C vóór een deadline.
+export interface Choice {
+  id: string;
+  projectId: string;
+  room: string;
+  question: string;
+  deadline: string;
+  options: ChoiceOption[];
+  chosenOptionId?: string;
+  decidedAt?: string;
+}
+
+// Besluitlogboek: wie besloot wat, wanneer, en met welk gevolg.
+export interface Decision {
+  id: string;
+  projectId: string;
+  at: string;
+  by: Role;
+  subject: string;
+  detail: string;
+  consequence?: string;
+}
+
 export type ProductStatus = "voorstel" | "goedgekeurd" | "afgewezen" | "besteld" | "geleverd";
 
 // Uitvoerder (aannemer, schilder, elektricien…). Ziet alleen de definitieve
@@ -149,5 +180,7 @@ export interface AppState {
   messages: Message[];
   invoices: Invoice[];
   contractors: Contractor[];
+  choices: Choice[];
+  decisions: Decision[];
   lastRead: Record<string, Partial<Record<Role, string>>>;
 }

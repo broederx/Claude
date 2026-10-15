@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { patchItem, removeItem } from "@/lib/actions";
+import { logDecision, patchItem, removeItem } from "@/lib/actions";
 import { euro, invoiceTotals, longDate } from "@/lib/format";
 import { useProject } from "@/lib/hooks";
 import { studio } from "@/lib/studio";
@@ -56,7 +56,14 @@ export default function InvoicePage() {
             <Button onClick={() => patchItem("invoices", invoice.id, { status: "betaald" })}>Markeer als betaald</Button>
           )}
           {role === "client" && invoice.kind === "offerte" && invoice.status === "verzonden" && (
-            <Button onClick={() => patchItem("invoices", invoice.id, { status: "geaccepteerd" })}>Offerte accepteren</Button>
+            <Button
+              onClick={() => {
+                patchItem("invoices", invoice.id, { status: "geaccepteerd" });
+                logDecision(invoice.projectId, "client", `Offerte ${invoice.number}`, "Offerte geaccepteerd.", `${euro(total)} incl. btw`);
+              }}
+            >
+              Offerte accepteren
+            </Button>
           )}
           {role === "client" && invoice.kind === "factuur" && invoice.status === "verzonden" && (
             <Button onClick={() => setPaying(true)}>Betalen met iDEAL</Button>

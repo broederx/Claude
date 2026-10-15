@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { addItem, patchItem } from "@/lib/actions";
+import { addItem, logDecision, patchItem } from "@/lib/actions";
 import { euro } from "@/lib/format";
 import { useProject } from "@/lib/hooks";
 import { newId } from "@/lib/store";
@@ -104,6 +104,7 @@ function ProductRow({ product: p, isClient }: { product: Product; isClient: bool
             onSubmit={(e) => {
               e.preventDefault();
               patchItem("products", p.id, { status: "afgewezen", clientNote: note.trim() || undefined });
+              logDecision(p.projectId, "client", p.name, "Product afgewezen.", note.trim() ? `Reden: ${note.trim()}` : undefined);
             }}
           >
             <input
@@ -118,7 +119,12 @@ function ProductRow({ product: p, isClient }: { product: Product; isClient: bool
           </form>
         ) : isClient && p.status === "voorstel" ? (
           <>
-            <Button onClick={() => patchItem("products", p.id, { status: "goedgekeurd", clientNote: undefined })}>
+            <Button
+              onClick={() => {
+                patchItem("products", p.id, { status: "goedgekeurd", clientNote: undefined });
+                logDecision(p.projectId, "client", p.name, "Product goedgekeurd.", `${euro(p.price * p.qty)} uit budget inrichting`);
+              }}
+            >
               Goedkeuren
             </Button>
             <Button

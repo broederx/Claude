@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { addItem, patchItem, removeItem } from "@/lib/actions";
-import { time, shortDate } from "@/lib/format";
+import { addItem, makeChoice, optionLetter, patchItem, removeItem, signedEuro } from "@/lib/actions";
+import { longDate, time, shortDate, today } from "@/lib/format";
 import { useProject } from "@/lib/hooks";
 import { newId, nowIso } from "@/lib/store";
-import type { MoodItem, Reaction, Role } from "@/lib/types";
+import type { Choice, MoodItem, Reaction, Role } from "@/lib/types";
 import { Badge, Button, Card, Empty, Field, PageHeader, Swatches, inputClass } from "@/components/ui";
 
 const reactions: { id: Reaction; label: string; icon: string }[] = [
@@ -20,23 +20,41 @@ export default function MoodboardPage() {
   const { project, state, role, scoped } = useProject();
   const [room, setRoom] = useState("Alle");
   const [adding, setAdding] = useState(false);
+  const [proposing, setProposing] = useState(false);
   if (!project) return null;
 
   const items = scoped(state.mood).filter((m) => room === "Alle" || m.room === room);
+  // Open keuzes eerst, op deadline; besloten keuzes daarna.
+  const choices = scoped(state.choices)
+    .filter((c) => room === "Alle" || c.room === room)
+    .sort((a, b) => Number(!!a.chosenOptionId) - Number(!!b.chosenOptionId) || a.deadline.localeCompare(b.deadline));
 
   return (
     <div>
       <PageHeader
-        title="Moodboard"
+        title="Moodboard & keuzes"
         intro={
           role === "client"
-            ? "Laat per beeld weten wat je ervan vindt. Je kunt ook zelf inspiratie toevoegen."
-            : "Deel sfeer, kleuren en materialen. De klant reageert per item."
+            ? "Laat per beeld weten wat je ervan vindt, en maak de keuzes die we van je nodig hebben vóór de deadline. Zo blijft de planning op schema."
+            : "Deel sfeer, kleuren en materialen, en leg keuzes voor als optie A, B of C met een deadline."
         }
-        action={!adding && <Button onClick={() => setAdding(true)}>+ Toevoegen</Button>}
+        action={
+          !adding &&
+          !proposing && (
+            <div className="flex flex-wrap gap-2">
+              {role === "architect" && (
+                <Button variant="secondary" onClick={() => setProposing(true)}>
+                  + Keuze voorleggen
+                </Button>
+              )}
+              <Button onClick={() => setAdding(true)}>+ Inspiratie toevoegen</Button>
+            </div>
+          )
+        }
       />
 
       {adding && <AddMoodForm projectId={project.id} rooms={project.rooms} role={role} onDone={() => setAdding(false)} />}
+      {proposing && <NewChoiceForm projectId={project.id} rooms={project.rooms} onDone={() => setProposing(false)} />}
 
       <div className="mb-6 flex flex-wrap gap-2">
         {["Alle", ...project.rooms].map((r) => (
@@ -49,9 +67,25 @@ export default function MoodboardPage() {
             }`}
           >
             {r}
+            {r !== "Alle" && scoped(state.choices).some((c) => c.room === r && !c.chosenOptionId) && (
+              <span className="ml-1.5 rounded-full bg-accent px-1.5 text-[10px] text-white">
+                {scoped(state.choices).filter((c) => c.room === r && !c.chosenOptionId).length}
+              </span>
+            )}
           </button>
         ))}
       </div>
+
+      {choices.length > 0 && (
+        <section className="mb-10 space-y-4">
+          <h3 className="text-xs uppercase tracking-[0.2em] text-muted">Keuzes</h3>
+          {choices.map((c) => (
+            <ChoiceCard key={c.id} choice={c} role={role} />
+          ))}
+        </section>
+      )}
+
+      {choices.length > 0 && <h3 className="mb-4 text-xs uppercase tracking-[0.2em] text-muted">Sfeer en inspiratie</h3>}
 
       {items.length === 0 ? (
         <Empty>Nog geen items voor deze ruimte.</Empty>
@@ -228,6 +262,162 @@ function AddMoodForm({ projectId, rooms, role, onDone }: { projectId: string; ro
         </div>
         <div className="flex gap-3">
           <Button type="submit">Toevoegen</Button>
+          <Button variant="ghost" onClick={onDone}>
+            Annuleren
+          </Button>
+        </div>
+      </form>
+    </Card>
+  );
+}
+
+function ChoiceCard({ choice: c, role }: { choice: Choice; role: Role }) {
+  const [pending, setPending] = useState<string | null>(null);
+  const chosen = c.options.find((o) => o.id === c.chosenOptionId);
+  const days = Math.round((new Date(c.deadline).getTime() - new Date(today()).getTime()) / 86400000);
+  const late = !chosen && days < 0;
+  const letters = c.options.map((_, i) => optionLetter(i)).join(", ").replace(/, ([^,]*)$/, " of $1");
+  const pendingIndex = c.options.findIndex((o) => o.id === pending);
+
+  return (
+    <Card className="p-5">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-xs text-muted">{c.room}</p>
+          <h4 className="font-serif text-2xl">{c.question}</h4>
+          {chosen ? (
+            <p className="text-sm text-sage">
+              Gekozen op {longDate(c.decidedAt!)}: optie {optionLetter(c.options.indexOf(chosen))}, {chosen.label}
+            </p>
+          ) : (
+            <p className={`text-sm ${late ? "text-warn" : "text-muted"}`}>
+              Kies {letters} vóór {longDate(c.deadline)}
+              {late ? ` (${-days} dag${days === -1 ? "" : "en"} te laat)` : days <= 3 ? ` (nog ${days} dag${days === 1 ? "" : "en"})` : ""}
+            </p>
+          )}
+        </div>
+        {chosen ? <Badge tone="sage">Besloten</Badge> : <Badge tone={late ? "warn" : "accent"}>Deadline {shortDate(c.deadline)}</Badge>}
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-3">
+        {c.options.map((o, i) => {
+          const isChosen = o.id === c.chosenOptionId;
+          const isPending = o.id === pending;
+          return (
+            <div
+              key={o.id}
+              className={`overflow-hidden rounded-xl border ${isChosen || isPending ? "border-foreground ring-1 ring-foreground" : "border-border"} ${chosen && !isChosen ? "opacity-50" : ""}`}
+            >
+              <Swatches colors={o.colors} className="h-16" />
+              <div className="space-y-2 p-3 text-sm">
+                <p>
+                  <span className="mr-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-[11px] text-background">
+                    {optionLetter(i)}
+                  </span>
+                  <span className="font-medium">{o.label}</span>
+                </p>
+                <p className="text-foreground/70">{o.description}</p>
+                <p className="text-muted">{signedEuro(o.priceDelta).replace(/^./, (ch) => ch.toUpperCase())}</p>
+                {role === "client" && !chosen && (
+                  <Button variant={isPending ? "primary" : "secondary"} className="w-full" onClick={() => setPending(o.id)}>
+                    Kies {optionLetter(i)}
+                  </Button>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {pending && !chosen && (
+        <div className="mt-4 flex flex-col gap-3 rounded-xl bg-background p-4 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            Je kiest optie {optionLetter(pendingIndex)}: {c.options[pendingIndex].label}. Deze keuze wordt vastgelegd in het besluitlogboek.
+          </p>
+          <div className="flex gap-2">
+            <Button variant="ghost" onClick={() => setPending(null)}>
+              Annuleren
+            </Button>
+            <Button onClick={() => makeChoice(c, pending)}>Bevestig keuze</Button>
+          </div>
+        </div>
+      )}
+
+      {role === "architect" && !chosen && (
+        <p className="mt-3 text-xs text-muted">De klant ziet deze keuze bij &quot;Te doen&quot; en kiest zelf. Na de deadline verschijnt hij bij jou als actiepunt.</p>
+      )}
+    </Card>
+  );
+}
+
+function NewChoiceForm({ projectId, rooms, onDone }: { projectId: string; rooms: string[]; onDone: () => void }) {
+  const [count, setCount] = useState(3);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const options = Array.from({ length: count }, (_, i) => ({
+      id: newId(),
+      label: String(data.get(`label${i}`)),
+      description: String(data.get(`desc${i}`)),
+      colors: [String(data.get(`color${i}`))],
+      priceDelta: Number(data.get(`delta${i}`)) || 0,
+    })).filter((o) => o.label);
+    addItem("choices", {
+      id: newId(),
+      projectId,
+      room: String(data.get("room")),
+      question: String(data.get("question")),
+      deadline: String(data.get("deadline")),
+      options,
+    });
+    onDone();
+  }
+
+  return (
+    <Card className="mb-8 p-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid gap-4 sm:grid-cols-4">
+          <div className="sm:col-span-2">
+            <Field label="Vraag aan de klant">
+              <input name="question" required className={inputClass} placeholder="Welke vloer komt in de entree?" />
+            </Field>
+          </div>
+          <Field label="Ruimte">
+            <select name="room" className={inputClass}>
+              {rooms.map((r) => (
+                <option key={r}>{r}</option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Kiezen vóór">
+            <input name="deadline" type="date" required className={inputClass} />
+          </Field>
+        </div>
+        <div className={`grid gap-4 ${count === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
+          {Array.from({ length: count }, (_, i) => (
+            <div key={i} className="space-y-2 rounded-xl border border-border p-3">
+              <p className="text-sm font-medium">Optie {optionLetter(i)}</p>
+              <input name={`label${i}`} required placeholder="Naam" aria-label={`Naam optie ${optionLetter(i)}`} className={inputClass} />
+              <input name={`desc${i}`} placeholder="Korte toelichting" aria-label={`Toelichting optie ${optionLetter(i)}`} className={inputClass} />
+              <div className="flex gap-2">
+                <input name={`delta${i}`} type="number" step="10" placeholder="Meerprijs €" aria-label={`Meerprijs optie ${optionLetter(i)}`} className={inputClass} />
+                <input
+                  name={`color${i}`}
+                  type="color"
+                  defaultValue="#c8b9a4"
+                  aria-label={`Kleur optie ${optionLetter(i)}`}
+                  className="h-9 w-12 shrink-0 cursor-pointer rounded-lg border border-border bg-transparent"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <Button type="submit">Voorleggen aan klant</Button>
+          <Button variant="ghost" onClick={() => setCount(count === 3 ? 2 : 3)}>
+            {count === 3 ? "Alleen A en B" : "+ Optie C"}
+          </Button>
           <Button variant="ghost" onClick={onDone}>
             Annuleren
           </Button>

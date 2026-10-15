@@ -1,6 +1,6 @@
 import type { AppState } from "./types";
 
-export const STATE_VERSION = 6;
+export const STATE_VERSION = 7;
 
 export const seed: AppState = {
   version: STATE_VERSION,
@@ -345,6 +345,51 @@ export const seed: AppState = {
       phone: "+31 10 000 00 13",
       projectIds: ["penthouse-rotterdam"],
     },
+  ],
+  choices: [
+    {
+      id: "c1",
+      projectId: "villa-wassenaar",
+      room: "Woonkamer",
+      question: "Welke vloer komt in woonkamer en keuken?",
+      deadline: "2026-09-15",
+      options: [
+        { id: "a", label: "Brede plank eiken naturel", description: "Rustig en tijdloos, past binnen budget.", colors: ["#c9ad86", "#b39670"], priceDelta: 0 },
+        { id: "b", label: "Visgraat eiken gerookt", description: "Warmer en klassieker, sluit aan op de jaren-dertig-details.", colors: ["#8c6a4c", "#6f523b"], priceDelta: 2400 },
+        { id: "c", label: "Microcement", description: "Naadloos en strak, minder warm.", colors: ["#cfc8bd", "#b7afa3"], priceDelta: 1100 },
+      ],
+      chosenOptionId: "b",
+      decidedAt: "2026-09-14T19:40:00",
+    },
+    {
+      id: "c2",
+      projectId: "villa-wassenaar",
+      room: "Entree",
+      question: "Welke wandlamp komt in de entree?",
+      deadline: "2026-10-23",
+      options: [
+        { id: "a", label: "Messing bol", description: "Warm, reflecteert het brons uit het moodboard.", colors: ["#b89a62", "#e8dcc2"], priceDelta: 0 },
+        { id: "b", label: "Linnen kap, zwart frame", description: "Zachter licht, grafisch silhouet.", colors: ["#e9e3d9", "#2b2a28"], priceDelta: -180 },
+        { id: "c", label: "Travertin schaal", description: "Sculpturaal, sluit aan op de badkamer.", colors: ["#d9cdb9", "#b8a68a"], priceDelta: 640 },
+      ],
+    },
+    {
+      id: "c3",
+      projectId: "villa-wassenaar",
+      room: "Badkamer",
+      question: "Welke kranen komen in de badkamer?",
+      deadline: "2026-10-12",
+      options: [
+        { id: "a", label: "Geborsteld brons", description: "Warm, past bij het travertin.", colors: ["#8a6a45"], priceDelta: 0 },
+        { id: "b", label: "Mat zwart", description: "Grafisch contrast met de lichte steen.", colors: ["#2b2a28"], priceDelta: -220 },
+      ],
+    },
+  ],
+  decisions: [
+    { id: "dc1", projectId: "villa-wassenaar", at: "2026-05-03T10:00:00", by: "client", subject: "Offerte OF-2026-014", detail: "Offerte geaccepteerd.", consequence: "Ontwerpfase en begeleiding uitvoering opgedragen" },
+    { id: "dc2", projectId: "villa-wassenaar", at: "2026-08-30T12:00:00", by: "client", subject: "Bank Bolton, 3,2 m, bouclé naturel", detail: "Product goedgekeurd.", consequence: "€ 9.850,00 uit budget inrichting" },
+    { id: "dc3", projectId: "villa-wassenaar", at: "2026-09-14T19:40:00", by: "client", subject: "Welke vloer komt in woonkamer en keuken?", detail: "Optie B gekozen: Visgraat eiken gerookt.", consequence: "Meerprijs € 2.400,00" },
+    { id: "dc4", projectId: "villa-wassenaar", at: "2026-09-19T09:30:00", by: "client", subject: "Impressies woonkamer en keuken", detail: "Versie 2 goedgekeurd." },
   ],
   lastRead: {
     "villa-wassenaar": { architect: "2026-09-25T09:05:00", client: "2026-09-25T09:05:00" },

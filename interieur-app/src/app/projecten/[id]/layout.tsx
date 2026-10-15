@@ -9,13 +9,14 @@ import { Swatches } from "@/components/ui";
 
 const tabs = [
   { slug: "", label: "Overzicht" },
-  { slug: "moodboard", label: "Moodboard" },
+  { slug: "moodboard", label: "Moodboard & keuzes" },
   { slug: "wensen", label: "Wensen" },
   { slug: "documenten", label: "Documenten" },
   { slug: "producten", label: "Producten & budget" },
   { slug: "planning", label: "Planning" },
   { slug: "berichten", label: "Berichten" },
   { slug: "financien", label: "Offertes & facturen" },
+  { slug: "besluiten", label: "Besluitlogboek" },
 ];
 
 export default function ProjectLayout({ children }: LayoutProps<"/projecten/[id]">) {

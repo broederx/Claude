@@ -12,6 +12,7 @@ import PlanningPage from "@/app/projecten/[id]/planning/page";
 import BerichtenPage from "@/app/projecten/[id]/berichten/page";
 import FinancienPage from "@/app/projecten/[id]/financien/page";
 import InvoicePage from "@/app/projecten/[id]/financien/[invoiceId]/page";
+import BesluitenPage from "@/app/projecten/[id]/besluiten/page";
 import UitvoerdersPage from "@/app/uitvoerders/page";
 import { usePath } from "./shims/router";
 
@@ -24,6 +25,7 @@ const sections: Record<string, () => ReactNode> = {
   planning: PlanningPage,
   berichten: BerichtenPage,
   financien: FinancienPage,
+  besluiten: BesluitenPage,
 };
 
 function Page() {

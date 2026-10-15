@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { addItem, patchItem } from "@/lib/actions";
+import { addItem, logDecision, patchItem } from "@/lib/actions";
 import { contractorCanSee, docCategories } from "@/lib/docs";
 import { fileSize, longDate } from "@/lib/format";
 import { useProject } from "@/lib/hooks";
@@ -104,14 +104,22 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
               />
               <Button
                 disabled={!feedback.trim()}
-                onClick={() => patchItem("docs", doc.id, { status: "wijziging-gevraagd", feedback: feedback.trim() })}
+                onClick={() => {
+                  patchItem("docs", doc.id, { status: "wijziging-gevraagd", feedback: feedback.trim() });
+                  logDecision(doc.projectId, "client", doc.title, `Wijziging gevraagd op versie ${doc.version}: ${feedback.trim()}`);
+                }}
               >
                 Versturen
               </Button>
             </div>
           ) : (
             <div className="flex gap-3">
-              <Button onClick={() => patchItem("docs", doc.id, { status: "goedgekeurd", feedback: undefined })}>
+              <Button
+                onClick={() => {
+                  patchItem("docs", doc.id, { status: "goedgekeurd", feedback: undefined });
+                  logDecision(doc.projectId, "client", doc.title, `Versie ${doc.version} goedgekeurd.`);
+                }}
+              >
                 Goedkeuren
               </Button>
               <Button variant="secondary" onClick={() => setAsking(true)}>

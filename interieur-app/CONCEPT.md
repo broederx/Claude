@@ -29,9 +29,12 @@ PDF's in bijlagen en Excel-lijstjes.
 1. **Overzicht.** De zes projectfases (kennismaking → wensen → schetsontwerp
    → definitief ontwerp → uitvoering → oplevering), "wacht op jouw reactie",
    budget, eerstvolgende afspraken en honorarium.
-2. **Moodboard.** Kleuren, materialen en inspiratie per ruimte. De klant
-   reageert met *mooi / twijfel / niet voor mij* en commentaar, en kan zelf
-   inspiratie toevoegen (bijv. een Pinterest-link).
+2. **Moodboard & keuzes.** Kleuren, materialen en inspiratie per ruimte. De
+   klant reageert met *mooi / twijfel / niet voor mij* en commentaar, en kan
+   zelf inspiratie toevoegen (bijv. een Pinterest-link). De studio legt
+   keuzes voor als **optie A, B of C met een deadline** en de meerprijs per
+   optie. De klant kiest en bevestigt; daarna ligt de keuze vast. Een
+   gemiste deadline verschijnt bij de studio als actiepunt.
 3. **Wensen.** Een vragenlijst (stijl, materialen, kleuren, huishouden,
    must-haves, prioriteiten). Dit vormt het programma van eisen.
 4. **Documenten.** Tekeningen, 3D-impressies, contracten en adviezen met
@@ -43,6 +46,10 @@ PDF's in bijlagen en Excel-lijstjes.
 7. **Berichten.** Een chat per project, met ongelezen-tellers.
 8. **Offertes & facturen.** Offertes accepteren, facturen met btw-berekening,
    doorlopende nummering, betalen met iDEAL (gesimuleerd), opslaan als PDF.
+9. **Besluitlogboek.** Elke keuze en elk akkoord (ontwerpkeuze, document,
+   product, offerte) wordt automatisch vastgelegd: wie, wanneer, wat en met
+   welk gevolg, zoals een meerprijs. Zo is later nooit onduidelijk wat er is
+   afgesproken.
 
 **Uitvoerders.** Aannemers, schilders, elektriciens en andere vakmensen loggen
 zelf in en zien **alleen de documenten en tekeningen die de studio als

@@ -22,6 +22,9 @@ export default function ProjectOverview() {
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(0, 3);
   const base = `/projecten/${project.id}`;
+  const decisions = scoped(state.decisions)
+    .sort((a, b) => b.at.localeCompare(a.at))
+    .slice(0, 3);
 
   return (
     <div className="grid gap-8 lg:grid-cols-3">
@@ -129,6 +132,28 @@ export default function ProjectOverview() {
           </p>
           <Link href={`${base}/financien`} className="mt-4 inline-block text-sm underline underline-offset-4">
             Naar offertes &amp; facturen
+          </Link>
+        </Card>
+
+        <Card className="p-6">
+          <h2 className="mb-4 text-xs uppercase tracking-[0.2em] text-muted">Laatste besluiten</h2>
+          {decisions.length === 0 ? (
+            <p className="text-sm text-muted">Nog geen besluiten.</p>
+          ) : (
+            <ul className="space-y-3 text-sm">
+              {decisions.map((d) => (
+                <li key={d.id}>
+                  <p className="font-medium">{d.subject}</p>
+                  <p className="text-muted">
+                    {d.detail}
+                    {d.consequence && ` · ${d.consequence}`}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
+          <Link href={`${base}/besluiten`} className="mt-4 inline-block text-sm underline underline-offset-4">
+            Naar besluitlogboek
           </Link>
         </Card>
       </div>

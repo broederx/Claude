@@ -1,8 +1,8 @@
 "use client";
 
 import { setAppState } from "./store";
-import { today } from "./format";
-import type { AppState, Role } from "./types";
+import { euro, today } from "./format";
+import type { AppState, Choice, Role } from "./types";
 
 type Collection =
   | "projects"
@@ -12,7 +12,8 @@ type Collection =
   | "milestones"
   | "messages"
   | "invoices"
-  | "contractors";
+  | "contractors"
+  | "choices";
 
 export function setContractorView(contractorView: string) {
   setAppState((s) => ({ ...s, contractorView }));
@@ -36,6 +37,35 @@ export function patchItem<K extends Collection>(key: K, id: string, changes: Par
 
 export function removeItem<K extends Collection>(key: K, id: string) {
   setAppState((s) => ({ ...s, [key]: (s[key] as Item<K>[]).filter((item) => item.id !== id) }));
+}
+
+// ---- Besluitlogboek ----
+
+export function logDecision(projectId: string, by: Role, subject: string, detail: string, consequence?: string) {
+  const at = new Date().toISOString().slice(0, 19);
+  const id = Math.random().toString(36).slice(2, 10);
+  setAppState((s) => ({ ...s, decisions: [...s.decisions, { id, projectId, at, by, subject, detail, consequence }] }));
+}
+
+export const optionLetter = (index: number) => String.fromCharCode(65 + index);
+
+export function signedEuro(value: number) {
+  return value > 0 ? `meerprijs ${euro(value)}` : value < 0 ? `${euro(-value)} goedkoper` : "geen meerprijs";
+}
+
+export function makeChoice(choice: Choice, optionId: string) {
+  const index = choice.options.findIndex((o) => o.id === optionId);
+  const option = choice.options[index];
+  if (!option) return;
+  patchItem("choices", choice.id, { chosenOptionId: optionId, decidedAt: new Date().toISOString().slice(0, 19) });
+  const delta = option.priceDelta;
+  logDecision(
+    choice.projectId,
+    "client",
+    choice.question,
+    `Optie ${optionLetter(index)} gekozen: ${option.label}.`,
+    delta ? signedEuro(delta).replace(/^./, (c) => c.toUpperCase()) : undefined,
+  );
 }
 
 export function markRead(projectId: string, role: Role, at: string) {
@@ -78,6 +108,11 @@ export function openActions(state: AppState, role: Role, projectId?: string): Op
   }
 
   if (role === "client") {
+    for (const c of inScope(state.choices).filter((c) => !c.chosenOptionId)) {
+      const letters = c.options.map((_, i) => optionLetter(i)).join(", ").replace(/, ([^,]*)$/, " of $1");
+      const date = new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long" }).format(new Date(c.deadline));
+      actions.push({ projectId: c.projectId, label: `Kies ${letters} vóór ${date}: ${c.question}`, href: `${base(c.projectId)}/moodboard` });
+    }
     for (const doc of inScope(state.docs).filter((d) => d.status === "ter-goedkeuring")) {
       actions.push({ projectId: doc.projectId, label: `Bekijk en keur goed: ${doc.title}`, href: `${base(doc.projectId)}/documenten` });
     }
@@ -103,6 +138,9 @@ export function openActions(state: AppState, role: Role, projectId?: string): Op
       }
     }
   } else {
+    for (const c of inScope(state.choices).filter((c) => !c.chosenOptionId && c.deadline < now)) {
+      actions.push({ projectId: c.projectId, label: `Keuze over de deadline: ${c.question}`, href: `${base(c.projectId)}/moodboard` });
+    }
     for (const doc of inScope(state.docs).filter((d) => d.status === "wijziging-gevraagd")) {
       actions.push({ projectId: doc.projectId, label: `Wijziging gevraagd: ${doc.title}`, href: `${base(doc.projectId)}/documenten` });
     }
