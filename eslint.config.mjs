@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Separate app with its own config.
+    "interieur-app/**",
+    "interieur-app-variant-2/**",
   ]),
 ]);
 

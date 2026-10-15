@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+/* Huisstijl mim | interiors. --stone is het grijs van het logo (#d1d0ce),
+   --surface ligt dicht bij het wit van de letters. */
+:root {
+  --background: #f3f2f0;
+  --surface: #fbfaf9;
+  --foreground: #2b2a28;
+  --muted: #7f7c78;
+  --border: #e0dedb;
+  --stone: #d1d0ce;
+  --accent: #7a736b;
+  --sage: #6f7765;
+  --warn: #b0553a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-stone: var(--stone);
+  --color-accent: var(--accent);
+  --color-sage: var(--sage);
+  --color-warn: var(--warn);
+  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-jost);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+@media print {
+  body {
+    background: white;
+  }
+}
