@@ -6,6 +6,7 @@ import { contractorCanSee } from "@/lib/docs";
 import { useAppState } from "@/lib/store";
 import { Button, Card, Field, PageHeader, inputClass } from "@/components/ui";
 import StudioOnly from "@/components/StudioOnly";
+import InviteButton from "@/components/InviteButton";
 
 export default function UitvoerdersPage() {
   const state = useAppState();
@@ -64,7 +65,8 @@ export default function UitvoerdersPage() {
                 );
               })}
             </fieldset>
-            <button type="button" onClick={() => removeItem("contractors", c.id)} className="text-xs text-muted hover:text-warn">
+            <InviteButton email={c.email} />
+            <button type="button" onClick={() => removeItem("contractors", c.id)} className="block text-xs text-muted hover:text-warn">
               Verwijderen
             </button>
           </Card>

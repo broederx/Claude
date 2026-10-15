@@ -5,7 +5,9 @@ import { addItem, logDecision, patchItem } from "@/lib/actions";
 import { contractorCanSee, docCategories } from "@/lib/docs";
 import { fileSize, longDate } from "@/lib/format";
 import { useProject } from "@/lib/hooks";
+import { openDocument, uploadDocument } from "@/lib/remote";
 import { newId, nowIso } from "@/lib/store";
+import { isLive } from "@/lib/supabase";
 import type { DocStatus, ProjectDoc } from "@/lib/types";
 import { Badge, Button, Card, Empty, Field, PageHeader, inputClass } from "@/components/ui";
 
@@ -54,7 +56,47 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
   const [feedback, setFeedback] = useState("");
   const [asking, setAsking] = useState(false);
   const [viewing, setViewing] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
   const status = statusInfo[doc.status];
+
+  async function view() {
+    if (!isLive || !doc.storagePath) {
+      setViewing(!viewing);
+      return;
+    }
+    try {
+      await openDocument(doc.storagePath);
+    } catch {
+      setError("Het bestand kon niet worden geopend.");
+    }
+  }
+
+  function shareNewVersion(file?: File, storagePath?: string) {
+    patchItem("docs", doc.id, {
+      version: doc.version + 1,
+      status: "ter-goedkeuring",
+      feedback: undefined,
+      uploadedAt: nowIso(),
+      // Een nieuwe versie is nooit automatisch definitief.
+      final: false,
+      fileName: file?.name ?? doc.fileName.replace(/v\d+/, `v${doc.version + 1}`),
+      ...(file ? { sizeKb: Math.ceil(file.size / 1024), storagePath } : {}),
+    });
+  }
+
+  async function uploadNewVersion(file: File | undefined) {
+    if (!file) return;
+    setBusy(true);
+    setError("");
+    try {
+      shareNewVersion(file, await uploadDocument(doc.projectId, doc.id, file));
+    } catch {
+      setError("Uploaden is niet gelukt. Probeer het opnieuw.");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
     <Card className="p-5">
@@ -73,11 +115,13 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
         <div className="flex flex-wrap items-center gap-3">
           <Badge tone={status.tone}>{status.label}</Badge>
           {!isClient && contractorCanSee(doc) && <Badge tone="sage">Definitief · zichtbaar voor uitvoerders</Badge>}
-          <Button variant="secondary" onClick={() => setViewing(!viewing)}>
+          <Button variant="secondary" onClick={() => void view()}>
             Bekijken
           </Button>
         </div>
       </div>
+
+      {error && <p className="mt-3 text-sm text-warn">{error}</p>}
 
       {viewing && (
         <p className="mt-4 rounded-xl bg-background p-3 text-sm text-muted">
@@ -143,22 +187,16 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
 
       {!isClient && doc.status === "wijziging-gevraagd" && (
         <div className="mt-4 border-t border-border pt-4">
-          <Button
-            variant="secondary"
-            onClick={() =>
-              patchItem("docs", doc.id, {
-                version: doc.version + 1,
-                status: "ter-goedkeuring",
-                feedback: undefined,
-                uploadedAt: nowIso(),
-                // Een nieuwe versie is nooit automatisch definitief.
-                final: false,
-                fileName: doc.fileName.replace(/v\d+/, `v${doc.version + 1}`),
-              })
-            }
-          >
-            Nieuwe versie {doc.version + 1} delen
-          </Button>
+          {isLive ? (
+            <label className="inline-flex cursor-pointer items-center rounded-full border border-border bg-surface px-4 py-2 text-sm hover:border-foreground/40">
+              {busy ? "Uploaden…" : `Nieuwe versie ${doc.version + 1} uploaden`}
+              <input type="file" className="sr-only" disabled={busy} onChange={(e) => void uploadNewVersion(e.target.files?.[0])} />
+            </label>
+          ) : (
+            <Button variant="secondary" onClick={() => shareNewVersion()}>
+              Nieuwe versie {doc.version + 1} delen
+            </Button>
+          )}
         </div>
       )}
     </Card>
@@ -166,19 +204,41 @@ function DocRow({ doc, isClient }: { doc: ProjectDoc; isClient: boolean }) {
 }
 
 function UploadForm({ projectId, onDone }: { projectId: string; onDone: () => void }) {
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const file = data.get("file");
-    const name = file instanceof File && file.name ? file.name : `${String(data.get("title"))}.pdf`;
+    const hasFile = file instanceof File && file.size > 0;
+    const name = hasFile ? file.name : `${String(data.get("title"))}.pdf`;
+    const id = newId();
+    let storagePath: string | undefined;
+    if (isLive) {
+      if (!hasFile) {
+        setError("Kies eerst een bestand.");
+        return;
+      }
+      setBusy(true);
+      setError("");
+      try {
+        storagePath = await uploadDocument(projectId, id, file);
+      } catch {
+        setError("Uploaden is niet gelukt. Probeer het opnieuw.");
+        setBusy(false);
+        return;
+      }
+    }
     addItem("docs", {
-      id: newId(),
+      id,
+      storagePath,
       projectId,
       title: String(data.get("title")),
       category: data.get("category") as ProjectDoc["category"],
       version: 1,
       fileName: name,
-      sizeKb: file instanceof File && file.size ? Math.ceil(file.size / 1024) : 800,
+      sizeKb: hasFile ? Math.ceil(file.size / 1024) : 800,
       uploadedAt: nowIso(),
       status: data.get("approval") ? "ter-goedkeuring" : "info",
       final: data.get("final") === "on",
@@ -188,7 +248,7 @@ function UploadForm({ projectId, onDone }: { projectId: string; onDone: () => vo
 
   return (
     <Card className="mb-8 p-6">
-      <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
+      <form onSubmit={(e) => void handleSubmit(e)} className="grid gap-4 sm:grid-cols-2">
         <Field label="Titel">
           <input name="title" required className={inputClass} />
         </Field>
@@ -202,7 +262,7 @@ function UploadForm({ projectId, onDone }: { projectId: string; onDone: () => vo
           </select>
         </Field>
         <Field label="Bestand">
-          <input name="file" type="file" className="text-sm" />
+          <input name="file" type="file" required={isLive} className="text-sm" />
         </Field>
         <label className="flex items-center gap-2 self-end text-sm">
           <input name="approval" type="checkbox" defaultChecked /> Klant om goedkeuring vragen
@@ -210,8 +270,11 @@ function UploadForm({ projectId, onDone }: { projectId: string; onDone: () => vo
         <label className="flex items-center gap-2 text-sm">
           <input name="final" type="checkbox" /> Definitief: zichtbaar voor uitvoerders
         </label>
+        {error && <p className="text-sm text-warn sm:col-span-2">{error}</p>}
         <div className="flex gap-3">
-          <Button type="submit">Delen</Button>
+          <Button type="submit" disabled={busy}>
+            {busy ? "Uploaden…" : "Delen"}
+          </Button>
           <Button variant="ghost" onClick={onDone}>
             Annuleren
           </Button>

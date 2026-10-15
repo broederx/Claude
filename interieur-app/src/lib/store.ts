@@ -1,19 +1,46 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { localIso } from "./format";
+import { pushChanges } from "./remote";
 import { seed, STATE_VERSION } from "./seed";
+import { isLive } from "./supabase";
 import type { AppState } from "./types";
 
-// Prototype-opslag: alles staat in de browser (localStorage). In de echte app
-// komt hier een database met inlog voor studio en klant voor in de plaats.
+// Twee standen:
+// - demo: voorbeelddata, alles bewaard in deze browser (localStorage);
+// - live: data uit Supabase; elke wijziging gaat direct naar de database.
 const STORAGE_KEY = "mim-portal-state";
 
-let state: AppState = seed;
+export const emptyState: AppState = {
+  version: STATE_VERSION,
+  role: "client",
+  contractorView: "",
+  projects: [],
+  mood: [],
+  briefings: [],
+  docs: [],
+  products: [],
+  milestones: [],
+  messages: [],
+  invoices: [],
+  contractors: [],
+  choices: [],
+  decisions: [],
+  lastRead: {},
+};
+
+let state: AppState = isLive ? emptyState : seed;
 let loaded = false;
 const listeners = new Set<() => void>();
+const emit = () => listeners.forEach((listener) => listener());
+
+// Fouten bij het opslaan in de database; de app toont ze als melding.
+let syncError: string | null = null;
+let onSyncFailed: (() => void) | null = null;
 
 function load() {
-  if (loaded || typeof window === "undefined") return;
+  if (loaded || typeof window === "undefined" || isLive) return;
   loaded = true;
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -36,7 +63,7 @@ function getSnapshot() {
 }
 
 function getServerSnapshot() {
-  return seed;
+  return isLive ? emptyState : seed;
 }
 
 export function useAppState() {
@@ -45,13 +72,44 @@ export function useAppState() {
 
 export function setAppState(update: (current: AppState) => AppState) {
   load();
+  const prev = state;
   state = update(state);
+  emit();
+  if (isLive) {
+    pushChanges(prev, state).catch((error: { code?: string }) => {
+      // 42501: de database weigert het op grond van de rechten.
+      syncError = error?.code === "42501"
+        ? "Dit mag je niet wijzigen. De laatste stand is opnieuw geladen."
+        : "Opslaan is niet gelukt. Controleer je internetverbinding; de laatste stand is opnieuw geladen.";
+      emit();
+      onSyncFailed?.();
+    });
+    return;
+  }
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
     // Negeer: de wijziging blijft in elk geval tot de pagina herlaadt.
   }
-  listeners.forEach((listener) => listener());
+}
+
+// Data uit de database overnemen, zonder die terug te sturen.
+export function replaceState(next: AppState) {
+  state = next;
+  emit();
+}
+
+export function useSyncError() {
+  return useSyncExternalStore(subscribe, () => syncError, () => null);
+}
+
+export function clearSyncError() {
+  syncError = null;
+  emit();
+}
+
+export function setSyncFailedHandler(handler: (() => void) | null) {
+  onSyncFailed = handler;
 }
 
 export function resetAppState() {
@@ -63,5 +121,5 @@ export function newId() {
 }
 
 export function nowIso() {
-  return new Date().toISOString().slice(0, 19);
+  return localIso();
 }

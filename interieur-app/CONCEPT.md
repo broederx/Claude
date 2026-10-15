@@ -85,8 +85,8 @@ dashboard en als teller op het tabblad.
 
 | Fase | Inhoud | Doel |
 | --- | --- | --- |
-| 1. Prototype *(nu)* | Klikbaar, met voorbeelddata in de browser | Vorm en functies toetsen, laten zien aan een paar vaste klanten |
-| 2. MVP | Inloggen, echte opslag, uploads, berichten, documenten, moodboard, wensen | Eerste echte project erin draaien |
+| 1. Prototype *(klaar)* | Klikbaar, met voorbeelddata in de browser | Vorm en functies toetsen, laten zien aan een paar vaste klanten |
+| 2. MVP *(gebouwd, zie ONLINE.md)* | Inloggen, echte opslag, uploads, berichten, documenten, moodboard, wensen | Eerste echte project erin draaien |
 | 3. Financieel | Offertes en facturen, iDEAL via Mollie, koppeling met de boekhouding | Facturen niet meer dubbel maken |
 | 4. Uitbreiding | Opleverdossier, push-notificaties, markeren op tekeningen | Volledige projectflow in de app |
 

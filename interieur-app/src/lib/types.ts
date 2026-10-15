@@ -67,6 +67,8 @@ export interface ProjectDoc {
   // Door de studio als definitief aangemerkt; alleen deze documenten zien
   // uitvoerders.
   final?: boolean;
+  // Waar het bestand in de opslag staat (alleen in de live-versie).
+  storagePath?: string;
 }
 
 export interface ChoiceOption {

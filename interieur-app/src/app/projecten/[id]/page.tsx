@@ -6,6 +6,8 @@ import { euro, invoiceTotals, longDate, phaseIndex, phases, today } from "@/lib/
 import { useProject } from "@/lib/hooks";
 import type { Phase } from "@/lib/types";
 import { Card } from "@/components/ui";
+import InviteButton from "@/components/InviteButton";
+import { isLive } from "@/lib/supabase";
 
 export default function ProjectOverview() {
   const { project, state, role, scoped } = useProject();
@@ -124,6 +126,16 @@ export default function ProjectOverview() {
             </ul>
           )}
         </Card>
+
+        {role === "architect" && isLive && (
+          <Card className="p-6">
+            <h2 className="mb-4 text-xs uppercase tracking-[0.2em] text-muted">Klant</h2>
+            <p className="text-sm">{project.clientName}</p>
+            <p className="mb-4 text-sm text-muted">{project.clientEmail}</p>
+            <InviteButton email={project.clientEmail} label="Uitnodiging sturen" />
+            <p className="mt-3 text-xs text-muted">De klant krijgt een inloglink en ziet alleen dit project.</p>
+          </Card>
+        )}
 
         <Card className="p-6">
           <h2 className="mb-4 text-xs uppercase tracking-[0.2em] text-muted">Honorarium</h2>

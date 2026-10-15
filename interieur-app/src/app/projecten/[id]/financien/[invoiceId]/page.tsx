@@ -7,6 +7,7 @@ import { logDecision, patchItem, removeItem } from "@/lib/actions";
 import { euro, invoiceTotals, longDate } from "@/lib/format";
 import { useProject } from "@/lib/hooks";
 import { studio } from "@/lib/studio";
+import { isLive } from "@/lib/supabase";
 import Logo from "@/components/Logo";
 import { Button, Card } from "@/components/ui";
 import { InvoiceStatusBadge } from "../status";
@@ -66,7 +67,7 @@ export default function InvoicePage() {
             </Button>
           )}
           {role === "client" && invoice.kind === "factuur" && invoice.status === "verzonden" && (
-            <Button onClick={() => setPaying(true)}>Betalen met iDEAL</Button>
+            <Button onClick={() => setPaying(true)}>{isLive ? "Betalen" : "Betalen met iDEAL"}</Button>
           )}
         </div>
       </div>
@@ -74,6 +75,18 @@ export default function InvoicePage() {
       {paying && (
         <Card className="mb-6 p-6 print:hidden">
           <p className="font-medium">Betalen: {euro(total)}</p>
+          {isLive ? (
+            <>
+              <p className="mt-1 text-sm text-muted">
+                Maak het bedrag over naar {studio.iban} ten name van {studio.name}, onder vermelding van {invoice.number}. Zodra
+                de betaling binnen is, zetten wij de factuur op betaald.
+              </p>
+              <Button variant="ghost" className="mt-3" onClick={() => setPaying(false)}>
+                Sluiten
+              </Button>
+            </>
+          ) : (
+          <>
           <p className="mt-1 text-sm text-muted">
             In de echte app ga je nu naar je eigen bank via iDEAL (bijvoorbeeld via Mollie). Dit is een simulatie.
           </p>
@@ -90,6 +103,8 @@ export default function InvoicePage() {
               Annuleren
             </Button>
           </div>
+          </>
+          )}
         </Card>
       )}
 

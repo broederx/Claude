@@ -33,6 +33,10 @@ const js = await build({
     "process.env.NODE_ENV": '"production"',
     // Op een eigen website werkt printen wel, dus daar komt "Download PDF" terug.
     "process.env.NEXT_PUBLIC_EMBED": site ? '"0"' : '"1"',
+    // De privélink is altijd de demo. Een eigen site wordt de echte app als de
+    // Supabase-instellingen bij het bouwen bekend zijn.
+    "process.env.NEXT_PUBLIC_SUPABASE_URL": JSON.stringify(site ? (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "") : ""),
+    "process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY": JSON.stringify(site ? (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "") : ""),
   },
 });
 

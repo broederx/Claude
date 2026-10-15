@@ -3,11 +3,13 @@
 import { useParams } from "next/navigation";
 import { useAppState } from "./store";
 import { demoClientEmail } from "./studio";
+import { isLive } from "./supabase";
 import type { AppState } from "./types";
 
 export function visibleProjects(state: AppState) {
   if (state.role === "architect") return state.projects;
-  if (state.role === "client") return state.projects.filter((p) => p.clientEmail === demoClientEmail);
+  // Live bepaalt de database al welke projecten een klant ziet.
+  if (state.role === "client") return isLive ? state.projects : state.projects.filter((p) => p.clientEmail === demoClientEmail);
   return [];
 }
 

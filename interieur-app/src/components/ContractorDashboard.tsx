@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { contractorProjects, docCategories } from "@/lib/docs";
 import { fileSize, longDate } from "@/lib/format";
+import { openDocument } from "@/lib/remote";
 import { useAppState } from "@/lib/store";
+import { isLive } from "@/lib/supabase";
 import { studio } from "@/lib/studio";
 import { Card, Empty } from "@/components/ui";
 
@@ -59,7 +61,10 @@ export default function ContractorDashboard() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => setOpen(open === doc.id ? null : doc.id)}
+                        onClick={() => {
+                          if (isLive && doc.storagePath) void openDocument(doc.storagePath);
+                          else setOpen(open === doc.id ? null : doc.id);
+                        }}
                         aria-expanded={open === doc.id}
                         className="self-start rounded-full border border-border bg-surface px-4 py-2 text-sm hover:border-foreground/40 sm:self-auto"
                       >

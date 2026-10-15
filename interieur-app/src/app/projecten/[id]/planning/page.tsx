@@ -59,7 +59,6 @@ export default function PlanningPage() {
           ))}
         </ol>
       )}
-      <p className="mt-6 text-xs text-muted">In de echte app kun je afspraken als agenda-uitnodiging (.ics) ontvangen.</p>
     </div>
   );
 }

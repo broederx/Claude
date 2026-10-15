@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import type { ReactNode } from "react";
 import AppHeader from "@/components/AppHeader";
+import AuthGate from "@/components/AuthGate";
 import Dashboard from "@/app/page";
 import ProjectLayout from "@/app/projecten/[id]/layout";
 import ProjectOverview from "@/app/projecten/[id]/page";
@@ -45,9 +46,11 @@ function Page() {
 
 createRoot(document.getElementById("root")!).render(
   <div className="min-h-full flex flex-col font-sans antialiased">
-    <AppHeader />
-    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
-      <Page />
-    </main>
+    <AuthGate>
+      <AppHeader />
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
+        <Page />
+      </main>
+    </AuthGate>
   </div>,
 );

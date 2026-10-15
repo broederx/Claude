@@ -8,6 +8,7 @@ import { visibleProjects } from "@/lib/hooks";
 import { newId, useAppState } from "@/lib/store";
 import { studio } from "@/lib/studio";
 import type { Project } from "@/lib/types";
+import { isLive } from "@/lib/supabase";
 import { Badge, Button, Card, Field, Swatches, inputClass } from "@/components/ui";
 import ContractorDashboard from "@/components/ContractorDashboard";
 
@@ -164,7 +165,9 @@ function NewProjectForm({ onDone }: { onDone: () => void }) {
           </Button>
         </div>
         <p className="text-xs text-muted sm:col-span-2">
-          In de echte app krijgt de klant nu een uitnodiging per e-mail.
+          {isLive
+            ? "Stuur de klant daarna een uitnodiging vanaf het projectoverzicht."
+            : "In de echte app krijgt de klant daarna een uitnodiging per e-mail."}
         </p>
       </form>
     </Card>

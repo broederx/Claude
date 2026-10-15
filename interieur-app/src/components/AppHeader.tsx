@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import Logo from "@/components/Logo";
+import { useLiveUser } from "@/components/AuthGate";
 import { setContractorView, setRole } from "@/lib/actions";
 import { resetAppState, useAppState } from "@/lib/store";
 import { studio } from "@/lib/studio";
@@ -18,6 +19,7 @@ const roles: { id: Role; label: string }[] = [
 export default function AppHeader() {
   const { role, contractors, contractorView } = useAppState();
   const [confirmReset, setConfirmReset] = useState(false);
+  const live = useLiveUser();
   const pathname = usePathname();
   const router = useRouter();
   const nav = [
@@ -53,6 +55,14 @@ export default function AppHeader() {
           </nav>
         )}
 
+        {live ? (
+          <div className="flex flex-wrap items-center gap-3 text-sm">
+            <span className="text-muted">{live.email}</span>
+            <button type="button" onClick={live.signOut} className="underline-offset-4 hover:underline">
+              Uitloggen
+            </button>
+          </div>
+        ) : (
         <div className="flex flex-wrap items-center gap-3">
           <span className="hidden text-xs text-muted md:inline">Bekijk als</span>
           <div className="flex rounded-full border border-border p-0.5 text-sm" role="group" aria-label="Weergave">
@@ -116,6 +126,7 @@ export default function AppHeader() {
             </button>
           )}
         </div>
+        )}
       </div>
     </header>
   );

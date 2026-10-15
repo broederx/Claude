@@ -1,7 +1,7 @@
 "use client";
 
 import { setAppState } from "./store";
-import { euro, today } from "./format";
+import { euro, localIso, today } from "./format";
 import type { AppState, Choice, Role } from "./types";
 
 type Collection =
@@ -42,7 +42,7 @@ export function removeItem<K extends Collection>(key: K, id: string) {
 // ---- Besluitlogboek ----
 
 export function logDecision(projectId: string, by: Role, subject: string, detail: string, consequence?: string) {
-  const at = new Date().toISOString().slice(0, 19);
+  const at = localIso();
   const id = Math.random().toString(36).slice(2, 10);
   setAppState((s) => ({ ...s, decisions: [...s.decisions, { id, projectId, at, by, subject, detail, consequence }] }));
 }
@@ -57,7 +57,7 @@ export function makeChoice(choice: Choice, optionId: string) {
   const index = choice.options.findIndex((o) => o.id === optionId);
   const option = choice.options[index];
   if (!option) return;
-  patchItem("choices", choice.id, { chosenOptionId: optionId, decidedAt: new Date().toISOString().slice(0, 19) });
+  patchItem("choices", choice.id, { chosenOptionId: optionId, decidedAt: localIso() });
   const delta = option.priceDelta;
   logDecision(
     choice.projectId,
