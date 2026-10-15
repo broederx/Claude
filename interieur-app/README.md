@@ -16,6 +16,11 @@ npm run dev
 Open http://localhost:3000. Wissel rechtsboven tussen **Studio** en **Klant**
 om beide kanten te zien. **Reset demo** zet de voorbeelddata terug.
 
+## Zelf online zetten
+
+`npm run build:site` maakt `site/index.html`: de hele app in één bestand die je
+op elke webhosting kunt zetten. Zie [site/HOSTEN.md](site/HOSTEN.md).
+
 ## Goed om te weten
 
 - Alle data staat alleen in de browser (localStorage); er is nog geen
